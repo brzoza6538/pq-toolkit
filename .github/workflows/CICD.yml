@@ -120,7 +120,7 @@ jobs:
 
 
       - name: check make
-        uses: docker compose exec pq-toolkit-api-dev which make
+        run: docker compose exec pq-toolkit-api-dev which make
 
 
       - name: tests
