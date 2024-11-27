@@ -90,11 +90,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: env-file
-
-      - name: get env.dev artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: env-file
           
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
