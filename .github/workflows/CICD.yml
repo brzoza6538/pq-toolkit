@@ -47,7 +47,7 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod build
 
       - name: stop prod docker
-        run: docker compose -f deployments/docker-compose.prod.yml --env-file deployments/.env.prod down
+        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
 
 
       - name: make .env.stage file
@@ -57,7 +57,7 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
 
       - name: stop stage docker
-        run: docker compose -f deployments/docker-compose.prod.yml --env-file deployments/.env.prod down
+        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
 
 
       - name: make .env.dev file
@@ -123,7 +123,7 @@ jobs:
           name: env-file
 
       - name: stop dev docker
-        run: docker compose -f deployments/docker-compose.yml --env-file deployments/.env.dev down
+        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev down
 
   # 5 ----------------------------------------------------------------------------------------------------
   notify:
