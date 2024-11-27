@@ -61,25 +61,23 @@ jobs:
 
 
       - name: make .env.dev file
-        run: cp src/deployments/.env.dev.sample src/deployments/.env.dev
+        run: cp src/deployments/.env.dev.sample env.dev
 
       - name: build docker dev image
-        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev build
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
 
 
-      - name: Check if .env.dev exists before upload
-        run: ls -l src/deployments/.env.dev
             
-      - name: upload .env.dev as artifact
+      - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
           name: env-file
-          path: src/deployments/.env.dev
+          path: env.dev
 
       - name: List uploaded artifacts
         run: |
           echo "Artifacts in this run:"
-          ls -l
+          ls -al
 
 # 3 ----------------------------------------------------------------------------------------------------
   check_code:
