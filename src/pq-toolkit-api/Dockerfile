@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 RUN pip install poetry
 
+RUN apt update
+RUN apt-get install -y make
+
 WORKDIR /app/
 
 ENV PYTHONPATH=/app
