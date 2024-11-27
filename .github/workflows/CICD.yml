@@ -69,7 +69,7 @@ jobs:
       - name: upload .env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: env-file  # Name of the artifact
+          name: env-file
           path: src/deployments/.env.dev
 
       - name: Check if artifact exists
@@ -83,18 +83,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-
-
-      - name: Check if .env.dev exists before upload
-        run: ls -l src/deployments/.env.dev
-
-      
-
+    
       - name: get env.dev artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: env-file
-          path: src/deployments/
+
+      - name: List .env.dev file
+        run: ls -l src/deployments/.env.dev
           
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev up -d
