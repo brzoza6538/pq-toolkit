@@ -66,7 +66,6 @@ jobs:
       - name: build docker dev image
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
 
-
             
       - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
@@ -74,10 +73,6 @@ jobs:
           name: env-file
           path: env.dev
 
-      - name: List uploaded artifacts
-        run: |
-          echo "Artifacts in this run:"
-          ls -al
 
 # 3 ----------------------------------------------------------------------------------------------------
   check_code:
@@ -93,22 +88,6 @@ jobs:
           
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
-
-      - name: wait for API
-        run: |
-            until docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev curl -s http://localhost:8080/health > /dev/null; do
-              echo "waiting for API..."
-              docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
-              sleep 5
-            done
-
-      - name: wait for minio
-        run: |
-          until docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-sample-storage-minio-dev curl -s http://localhost:9000 > /dev/null; do
-            echo "waiting for database..."
-            docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-sample-storage-minio-dev
-            sleep 5
-            done
 
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
