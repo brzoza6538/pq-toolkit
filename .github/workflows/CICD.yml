@@ -88,8 +88,8 @@ jobs:
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev up -d
 
-        - name: wait for API
-          run: |
+      - name: wait for API
+        run: |
             until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev curl -s http://localhost:8080/health > /dev/null; do
               echo "waiting for API..."
               docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-toolkit-api-dev
