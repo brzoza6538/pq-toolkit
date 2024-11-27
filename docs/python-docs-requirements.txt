@@ -3,5 +3,3 @@ mkdocs-material
 termynal
 mkdocstrings
 mkdocstrings[python]
-mkdocstrings-handlers
-griffe
