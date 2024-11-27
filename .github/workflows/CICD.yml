@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - pipeline setup
+      - brzoza6538-pipeline-setup
   pull_request:
     branches:
       - main
-      - pipeline setup
+      - brzoza6538-pipeline-setup
 
 permissions:
   contents: write
