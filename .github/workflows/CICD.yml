@@ -71,7 +71,7 @@ jobs:
       - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: env-file
+          name: env.dev
           path: env.dev
 
       - name: List uploaded artifacts
@@ -85,68 +85,54 @@ jobs:
     needs: check_docker
     steps:
       - uses: actions/checkout@v4
-
-
-
-      - name: List artifacts before download
-        run: |
-          echo "Artifacts available for download:"
-          ls -l
       
       - name: get env.dev artifact
         uses: actions/download-artifact@v4
         with:
-          name: env-file
-      
-      - name: List .env.dev file after download
-        run: ls -l src/deployments/.env.dev
+          name: env.dev
 
-
-
-    
       - name: get env.dev artifact
         uses: actions/download-artifact@v3
         with:
           name: env-file
-
-      - name: List .env.dev file
-        run: ls -l src/deployments/.env.dev
-
-
-
-
           
       - name: start docker
-        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev up -d
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
       - name: wait for API
         run: |
-            until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev curl -s http://localhost:8080/health > /dev/null; do
+            until docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev curl -s http://localhost:8080/health > /dev/null; do
               echo "waiting for API..."
-              docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-toolkit-api-dev
+              docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
               sleep 5
             done
 
       - name: wait for minio
         run: |
-          until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-sample-storage-minio-dev curl -s http://localhost:9000 > /dev/null; do
+          until docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-sample-storage-minio-dev curl -s http://localhost:9000 > /dev/null; do
             echo "waiting for database..."
-            docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-sample-storage-minio-dev
+            docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-sample-storage-minio-dev
             sleep 5
             done
 
       - name: tests
-        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev make test
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
       - name: linter
-        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev make lint
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
 
 # 4 ----------------------------------------------------------------------------------------------------
   cleanup:
     runs-on: ubuntu-latest
     needs: check_code
+    
     steps:
       - uses: actions/checkout@v4
+
+      - name: get env.dev artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: env.dev
 
       - name: get env.dev artifact
         uses: actions/download-artifact@v3
@@ -154,7 +140,7 @@ jobs:
           name: env-file
 
       - name: stop dev docker
-        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev down
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev down
 
   # 5 ----------------------------------------------------------------------------------------------------
   notify:
