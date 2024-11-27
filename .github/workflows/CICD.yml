@@ -65,16 +65,21 @@ jobs:
 
       - name: build docker dev image
         run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev build
-      
+
+
+      - name: Check if .env.dev exists before upload
+        run: ls -l src/deployments/.env.dev
+            
       - name: upload .env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
           name: env-file
           path: src/deployments/.env.dev
 
-      - name: Check if artifact exists
+      - name: List uploaded artifacts
         run: |
-          ls -l src/deployments/.env.dev
+          echo "Artifacts in this run:"
+          ls -l
 
 # 3 ----------------------------------------------------------------------------------------------------
   check_code:
@@ -82,6 +87,23 @@ jobs:
     needs: check_docker
     steps:
       - uses: actions/checkout@v4
+
+
+
+      - name: List artifacts before download
+        run: |
+          echo "Artifacts available for download:"
+          ls -l
+      
+      - name: get env.dev artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: env-file
+      
+      - name: List .env.dev file after download
+        run: ls -l src/deployments/.env.dev
+
+
 
     
       - name: get env.dev artifact
@@ -91,6 +113,10 @@ jobs:
 
       - name: List .env.dev file
         run: ls -l src/deployments/.env.dev
+
+
+
+
           
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev up -d
