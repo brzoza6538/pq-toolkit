@@ -69,7 +69,7 @@ jobs:
       - name: upload .env.dev as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: env-file
+          name: env-file  # Name of the artifact
           path: src/deployments/.env.dev
 
 # 3 ----------------------------------------------------------------------------------------------------
@@ -79,7 +79,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-        
       - name: get env.dev artifact
         uses: actions/download-artifact@v3
         with:
