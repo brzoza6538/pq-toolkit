@@ -83,6 +83,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if artifact exists before download
+        run: |
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq '.artifacts[] | select(.name=="env-file")'
+
+
       - name: get env.dev artifact
         uses: actions/download-artifact@v4
         with:
