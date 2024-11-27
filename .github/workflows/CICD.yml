@@ -1,0 +1,158 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+      - pipeline setup
+  pull_request:
+    branches:
+      - main
+      - pipeline setup
+
+permissions:
+  contents: write
+
+env:
+  DOCS_REQ: docs/python-docs-requirements.txt
+  MKDOCS_CONFIG: docs/mkdocs.yml
+
+jobs:
+# 1 ----------------------------------------------------------------------------------------------------
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install docker compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          
+        
+# 2 ----------------------------------------------------------------------------------------------------
+  check_docker:
+   runs-on: ubuntu-latest
+   needs: setup 
+   steps:
+      - uses: actions/checkout@v4
+
+      - name: make  .env.prod file
+        run: cp src/deployments/.env.prod.sample src/deployments/.env.prod
+
+      - name: build docker prod image
+        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod build
+
+      - name: stop prod docker
+        run: docker compose -f deployments/docker-compose.prod.yml --env-file deployments/.env.prod down
+
+
+      - name: make .env.stage file
+        run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
+        
+      - name: build docker stage image
+        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
+
+      - name: stop stage docker
+        run: docker compose -f deployments/docker-compose.prod.yml --env-file deployments/.env.prod down
+
+
+      - name: make .env.dev file
+        run: cp src/deployments/.env.dev.sample src/deployments/.env.dev
+
+      - name: build docker dev image
+        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev build
+      
+      - name: upload .env.dev as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-file
+          path: src/deployments/.env.dev
+
+# 3 ----------------------------------------------------------------------------------------------------
+  check_code:
+    runs-on: ubuntu-latest
+    needs: check_docker
+    steps:
+      - uses: actions/checkout@v4
+
+        
+      - name: get env.dev artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: env-file
+          
+      - name: start docker
+        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev up -d
+
+        - name: wait for API
+          run: |
+            until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev curl -s http://localhost:8080/health > /dev/null; do
+              echo "waiting for API..."
+              docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-toolkit-api-dev
+              sleep 5
+            done
+
+      - name: wait for minio
+        run: |
+          until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-sample-storage-minio-dev curl -s http://localhost:9000 > /dev/null; do
+            echo "waiting for database..."
+            docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-sample-storage-minio-dev
+            sleep 5
+            done
+
+      - name: tests
+        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev make test
+
+      - name: linter
+        run: docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-api-dev make lint
+
+# 4 ----------------------------------------------------------------------------------------------------
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: check_code
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: get env.dev artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: env-file
+
+      - name: stop dev docker
+        run: docker compose -f deployments/docker-compose.yml --env-file deployments/.env.dev down
+
+  # 5 ----------------------------------------------------------------------------------------------------
+  notify:
+    runs-on: ubuntu-latest
+    needs: cleanup
+    steps:
+      - uses: actions/checkout@v4
+      
+      
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - run: |
+         pip install -r $DOCS_REQ
+         pip install --upgrade pip  
+      - name: Build documentation
+        run: mkdocs build --config-file $MKDOCS_CONFIG
+
+      - run: mkdocs gh-deploy --config-file $MKDOCS_CONFIG --force
