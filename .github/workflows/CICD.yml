@@ -89,6 +89,27 @@ jobs:
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
+
+
+      - name: Wait for Database and API to be healthy
+        run: |
+          until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-toolkit-db-dev pg_isready -U postgres; do
+            echo "Waiting for database..."
+            docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-toolkit-db-dev
+            sleep 1
+          done
+      - name: Wait for Minio to be ready
+        run: |
+          until docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev exec pq-sample-storage-minio-dev curl -s http://localhost:9000 > /dev/null; do
+            echo "Waiting for Minio to be ready..."
+            docker compose -f src/deployments/docker-compose.yml --env-file src/deployments/.env.dev logs pq-sample-storage-minio-dev
+            sleep 1
+          done
+          echo "Minio is ready."
+
+
+
+
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
