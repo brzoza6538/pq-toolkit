@@ -119,15 +119,11 @@ jobs:
 
 
 
-      - name: check make
-        run: docker compose exec pq-toolkit-api-dev which make
-
-
-      - name: tests
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
-
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
+        
+      - name: tests
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
 # 4 ----------------------------------------------------------------------------------------------------
   cleanup:
