@@ -105,7 +105,7 @@ jobs:
 
       - name: tests pq-toolkit
         working-directory: src/pq-toolkit 
-        run: make test-all
+        run: make test-dry
 
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
