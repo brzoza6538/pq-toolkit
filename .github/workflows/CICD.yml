@@ -100,8 +100,12 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
  
-      - name: tests
+      - name: tests tests pq-toolkit-api
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
+
+      - name: tests pq-toolkit
+        working-directory: src/pq-toolkit 
+        run: make test-all
 
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
