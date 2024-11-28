@@ -13,6 +13,10 @@ from tests.test_utils import generate_random_experiment_name
 
 
 class TestExperimentsWithAPI(unittest.TestCase):
+
+    def faultyTest(self):
+        assertTrue(False)
+    
     def setUp(self):
         self.client = PqToolkitAPIClient(
             base_port=8000, login="admin", password="admin"
