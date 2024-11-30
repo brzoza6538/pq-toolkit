@@ -9,8 +9,11 @@ import {
   type MUSHRATest
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
+import { getSampleUrl } from '../experiments/common/utils'
+import Playback from '../player/Playback'
 
 const MushraEditor = ({
+  experimentName,
   currentTest,
   setCurrentTest,
   fileList,
@@ -224,6 +227,11 @@ const MushraEditor = ({
                   </span>
                 </span>
                 <span className="ml-2 break-words w-full">{file.name}</span>
+				  <Playback
+					key={`sample_player_${file.name}`}
+					assetPath={getSampleUrl(experimentName, file.name)}
+					name={`Sample ${file.name}`}
+				  />
               </label>
             ))
           )}

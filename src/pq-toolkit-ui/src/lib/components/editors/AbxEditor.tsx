@@ -11,8 +11,11 @@ import {
 import { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import DeleteQuestionComp from '../form/deleteQuestionComp'
+import { getSampleUrl } from '../experiments/common/utils'
+import Playback from '../player/Playback'
 
 const AbxEditor = ({
+  experimentName,
   currentTest,
   setCurrentTest,
   fileList,
@@ -118,6 +121,11 @@ const AbxEditor = ({
                   >
                     {file.name}
                   </span>
+				  <Playback
+					key={`sample_player_${file.name}`}
+					assetPath={getSampleUrl(experimentName, file.name)}
+					name={`Sample ${file.name}`}
+				  />
                 </label>
               )
             })
