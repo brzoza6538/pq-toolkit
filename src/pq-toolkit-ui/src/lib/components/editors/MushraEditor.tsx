@@ -169,6 +169,7 @@ const MushraEditor = ({
             </h3>
           ) : (
             fileList.map((file, index) => (
+			  <div>
               <label
                 key={index}
                 className="flex items-center relative cursor-pointer mr-2 break-words w-full"
@@ -227,12 +228,13 @@ const MushraEditor = ({
                   </span>
                 </span>
                 <span className="ml-2 break-words w-full">{file.name}</span>
+                </label>
 				  <Playback
 					key={`sample_player_${file.name}`}
 					assetPath={getSampleUrl(experimentName, file.name)}
 					name={`Sample ${file.name}`}
 				  />
-              </label>
+				</div>
             ))
           )}
         </div>
