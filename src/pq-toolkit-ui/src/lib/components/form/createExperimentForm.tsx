@@ -854,6 +854,7 @@ const CreateExperimentForm = ({
                 case 'MUSHRA':
                   return (
                     <MushraEditor
+					  experimentName={setup.name}
                       currentTest={currentTest as MUSHRATest}
                       setCurrentTest={setCurrentTest}
                       fileList={fileList}
@@ -863,6 +864,7 @@ const CreateExperimentForm = ({
                 case 'AB':
                   return (
                     <AbEditor
+					  experimentName={setup.name}
                       currentTest={currentTest as ABTest}
                       setCurrentTest={setCurrentTest}
                       fileList={fileList}
@@ -872,6 +874,7 @@ const CreateExperimentForm = ({
                 case 'ABX':
                   return (
                     <AbxEditor
+					  experimentName={setup.name}
                       currentTest={currentTest as ABXTest}
                       setCurrentTest={setCurrentTest}
                       fileList={fileList}
@@ -881,6 +884,7 @@ const CreateExperimentForm = ({
                 case 'APE':
                   return (
                     <ApeEditor
+					  experimentName={setup.name}
                       currentTest={currentTest as APETest}
                       setCurrentTest={setCurrentTest}
                       fileList={fileList}
