@@ -3,6 +3,8 @@ from enum import Enum
 import inspect
 import uuid
 
+import copy 
+
 class AccessToken(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -197,6 +199,32 @@ class PqTestMUSHRA(PqTestBase):
     type: PqTestTypes = PqTestTypes.MUSHRA
     results: list[PqTestMUSHRAResult] | None = None
 
+    
+###TODO - error handling
+    def get_average_results(self) -> PqTestMUSHRAResult:
+
+        average = PqTestMUSHRAResult(self.results[0])
+
+        for anchor in average.anchors_scores:
+            anchor.score = 0
+        for sample in average.samples_scores:
+            sample.score = 0
+        average.reference_score = 0
+
+        for result in self.results:
+            for i in range(len(average.anchors_scores)):
+                average.anchors_scores[i].score += result.anchors_scores[i].score
+            for i in range(len(average.samples_scores)):
+                average.samples_scores[i].score += result.samples_scores[i].score
+            average.reference_score += result.reference_score
+        
+        for anchor in average.anchors_scores:
+            anchor.score = int(anchor.score / len(self.results))
+        for sample in average.samples_scores:
+            sample.score = int(sample.score / len(self.results))
+        average.reference_score = int(average.reference_score / len(self.results))
+
+        return average
 
 class PqTestAPE(PqTestBase):
     """
