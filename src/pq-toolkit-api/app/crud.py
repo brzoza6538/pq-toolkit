@@ -67,7 +67,7 @@ class IncorrectInputData(PqException):
 
 
 def transform_test(test: Test) -> dict:
-    test_dict = {"test_number": test.number, "type": test.type}
+    test_dict = {"uid": test.id, "test_number": test.number, "type": test.type}
     if test.test_setup:
         test_dict.update(test.test_setup)
     return test_dict
@@ -128,9 +128,10 @@ def add_experiment(session: Session, experiment_name: str):
 
 def transform_test_upload(test: PqTestBase) -> Test:
     test_dict = test.model_dump()
+    test_dict.pop("uid")
     test_dict.pop("test_number")
     test_dict.pop("type")
-    return Test(number=test.test_number, type=test.type, test_setup=test_dict)
+    return Test(id=test.uid, number=test.test_number, type=test.type, test_setup=test_dict)
 
 
 def upload_experiment_config(

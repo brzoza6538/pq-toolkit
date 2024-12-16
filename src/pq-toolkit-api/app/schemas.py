@@ -3,7 +3,6 @@ from enum import Enum
 import inspect
 import uuid
 
-
 class AccessToken(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -64,6 +63,7 @@ class PqTestBase(BaseModel):
         test_number: A number of the test.
         type: A type of the test.
     """
+    uid: int | None = None
 
     model_config = ConfigDict(use_enum_values=True, validate_default=True)
 
@@ -71,6 +71,7 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
+    shit: int | None = None
 
 
 class PqTestAB(PqTestBase):
@@ -148,9 +149,13 @@ class PqTestAPE(PqTestBase):
 
 
 class PqTestBaseResult(BaseModel):
+    #uid: int | None = None
+
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
+
+
 
 
 class PqSelection(BaseModel):
