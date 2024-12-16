@@ -17,10 +17,14 @@ from app.schemas import (
     PqTestBase,
     PqTestTypes,
     PqTestResultsList,
+    PqTestAB,
+    PqTestABX,
+    PqTestMUSHRA,
+    PqTestAPE,
 )
 from app.utils import PqException
 from pydantic import ValidationError
-
+from typing import Dict
 
 class ExperimentNotFound(PqException):
     def __init__(self, experiment_name: str) -> None:
@@ -50,6 +54,10 @@ class NoTestsFoundForExperiment(PqException):
     def __init__(self, experiment_name: str) -> None:
         super().__init__(f"Experiment {experiment_name} has not tests!", error_code=404)
 
+class TestNotFound(PqException):
+    def __init__(self, test_id: int) -> None:
+        super().__init__(f"test {test_id} does not exist", error_code=404)
+
 
 class NoResultsData(PqException):
     def __init__(self) -> None:
@@ -67,7 +75,7 @@ class IncorrectInputData(PqException):
 
 
 def transform_test(test: Test) -> dict:
-    test_dict = {"uid": test.id, "test_number": test.number, "type": test.type}
+    test_dict = {"uid": test.id, "test_number": test.number, "type": test.type, "results": test.experiment_test_results}
     if test.test_setup:
         test_dict.update(test.test_setup)
     return test_dict
@@ -131,7 +139,8 @@ def transform_test_upload(test: PqTestBase) -> Test:
     test_dict.pop("uid")
     test_dict.pop("test_number")
     test_dict.pop("type")
-    return Test(id=test.uid, number=test.test_number, type=test.type, test_setup=test_dict)
+    test_dict.pop("results")
+    return Test(id=test.uid, number=test.test_number, type=test.type, test_setup=test_dict, experiment_test_results=results)
 
 
 def upload_experiment_config(
@@ -197,7 +206,7 @@ def add_test_results(
         raise NoResultsData()
 
     test_info_mapper = {test.number: (test.id, test.type) for test in experiment.tests}
-    placeholder = str(uuid.uuid4())  # Generate a unique UUID
+    placeholder = str(uuid.uuid4())
 
     for result in results:
         test_info = test_info_mapper.get(result.get("testNumber"))
@@ -250,10 +259,36 @@ def get_experiment_tests_results(
         for result in test.experiment_test_results:
             if result_name is None or result.experiment_use == result_name:
                 results.append(transform_test_result(result, test.type))
+    
+    print("----------------------------------------------------------\n\n\n\n\n")
+    print("----------------------------------------------------------\n\n\n\n\n")
+
+    experiments = get_all(session)
+
+    print("----------------------------------------------------------\n\n\n\n\n")
+    #x = get_test_results(session=session, test_id=test.id).model_dump()
+    for uid, experiment in experiments.items():
+        print(f"UID: {uid}")
+        print(experiment.model_dump())  # Wyświetla dane w formacie słownika
+        print("-----")    
+    
+    print("----------------------------------------------------------\n\n\n\n\n")
+    print("----------------------------------------------------------\n\n\n\n\n")
+    print("----------------------------------------------------------\n\n\n\n\n")
+
     return PqTestResultsList(results=results)
 
 
-def get_test_results(session: Session, test_id: int) -> PqTestResultsList:
+
+
+
+
+
+
+
+
+def get_test_results_by_id(session: Session, test_id: int) -> PqTestResultsList:
+
     statement = (
         select(
             Test.id,
@@ -269,19 +304,68 @@ def get_test_results(session: Session, test_id: int) -> PqTestResultsList:
     
     parsed_results = []
     for test_id, test_type, result_id, test_result in results:
-        
-        if test_type == "AB":
+        if test_type == PqTestTypes.AB:
             parsed_results.append(PqTestABResult(**test_result))
-        elif test_type == "ABX":
+        elif test_type ==  PqTestTypes.ABX:
             parsed_results.append(PqTestABXResult(**test_result))
-        elif test_type == "MUSHRA":
+        elif test_type ==  PqTestTypes.MUSHRA:
             parsed_results.append(PqTestMUSHRAResult(**test_result))
-        elif test_type == "APE":
+        elif test_type ==  PqTestTypes.APE:
             parsed_results.append(PqTestAPEResult(**test_result))
-        else:
-            raise ValueError(f"Unknown test type: {test_result['type']}")
     
     return PqTestResultsList(results=parsed_results)
+
+
+def get_test_by_id(session: Session, test_id: int) -> PqTestAB | PqTestABX | PqTestMUSHRA | PqTestAPE :
+    statement = select(Test).where(Test.id == test_id)
+    try:
+        result = session.exec(statement).one()
+    except NoResultFound:
+        raise TestNotFound(test_id)
+
+
+    if result.type == PqTestTypes.AB:
+        test_to_return = PqTestAB.model_validate(
+            {
+                "uid": result.id,
+                "test_number": result.number,
+                "samples": result.test_setup["samples"],
+                "questions": result.test_setup["questions"],
+                "results": get_test_results(session, test_id)
+            }
+        )
+    elif result.type == PqTestTypes.ABX:
+
+        test_to_return = PqTestABX.model_validate(
+            {
+                "uid": result.id,
+                "test_number": result.number,
+                "x_sample_id": result.test_setup["x_sample_id"],
+                "samples": result.test_setup["samples"],
+                "questions": result.test_setup["questions"],
+                "results": get_test_results(session, test_id)
+            }
+        ) 
+
+    return test_to_return
+
+
+
+
+def get_all(session: Session) -> Dict[str, PqExperiment]:
+
+    experiment_dict: Dict[str, PqExperiment] = {}
+    experiments = session.exec(select(Experiment)).all()
+    for experiment in experiments:
+        experiment_dict[experiment.id] = transform_experiment(experiment)
+
+        for test in experiment_dict[experiment.id].tests:
+            test.results = get_test_results_by_id(session, test.uid)
+
+
+    return experiment_dict
+
+
 
 
 def authenticate(session: Session, username: str, hashed_password: str) -> Admin | None:

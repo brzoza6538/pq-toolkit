@@ -136,11 +136,29 @@ class PqTestBase(BaseModel):
     )
     type: PqTestTypes
     #shit: int | None = None
-    #results: list[PqTestResultsList] | None = None
+    results: list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult] | None = None
 
-    def __init__ (self):
-        print("waaaaaa")
-
+    # @field_validator("results", mode="before")  # noqa
+    # @classmethod
+    # def validate_results(
+    #     cls, v: list
+    # ) -> list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]:
+    #     results_list = []
+    #     for result in v:
+    #         object_type = type(result)
+    #         if inspect.isclass(object_type) and issubclass(object_type, PqTestBase):
+    #             results_list.append(result)
+    #         else:
+    #             match PqTestTypes(result.get("type")):
+    #                 case PqTestTypes.AB:
+    #                     results_list.append(PqTestABResult(**result))
+    #                 case PqTestTypes.ABX:
+    #                     results_list.append(PqTestABXResult(**result))
+    #                 case PqTestTypes.APE:
+    #                     results_list.append(PqTestAPEResult(**result))
+    #                 case PqTestTypes.MUSHRA:
+    #                     results_list.append(PqTestMUSHRAResult(**result))
+    #     return results_list
 
 class PqTestAB(PqTestBase):
     """
@@ -156,23 +174,9 @@ class PqTestAB(PqTestBase):
     samples: list[PqSample]
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
+    results: list[PqTestABResult] | None = None
 
-    # results: list[PqTestResultsList] | None = None
 
-    # @field_validator("results", mode="before")  # noqa
-    # @classmethod
-    # def validate_results(cls, v: list  | None) -> list[PqTestABResult]:
-    #     if v is None:
-    #         return []
-
-    #     results_list = []
-
-    #     for result in v:
-    #         if isinstance(result, dict):
-    #             results_list.append(PqTestABResult(**result))
-    #         elif isinstance(result, PqTestABResult):
-    #             results_list.append(result)
-    #     return results_list
 
 class PqTestABX(PqTestBase):
     """
@@ -194,7 +198,7 @@ class PqTestABX(PqTestBase):
     samples: list[PqSample]
     questions: list[PqQuestion] | None = None
     type: PqTestTypes = PqTestTypes.ABX
-
+    results: list[PqTestABXResult] | None = None
 
 class PqTestMUSHRA(PqTestBase):
     """
@@ -214,6 +218,7 @@ class PqTestMUSHRA(PqTestBase):
     anchors: list[PqSample]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.MUSHRA
+    results: list[PqTestMUSHRAResult] | None = None
 
 
 class PqTestAPE(PqTestBase):
@@ -230,6 +235,7 @@ class PqTestAPE(PqTestBase):
     axis: list[PqQuestion]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.APE
+    results: list[PqTestAPEResult] | None = None
 
 
 
