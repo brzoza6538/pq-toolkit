@@ -253,6 +253,37 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
+def get_test_results(session: Session, test_id: int) -> PqTestResultsList:
+    statement = (
+        select(
+            Test.id,
+            Test.type,
+            ExperimentTestResult.id,
+            ExperimentTestResult.test_result
+        )
+        .join(ExperimentTestResult, ExperimentTestResult.test_id == Test.id)
+		.where(ExperimentTestResult.test_id == test_id)
+    )
+
+    results = session.exec(statement).all()
+    
+    parsed_results = []
+    for test_id, test_type, result_id, test_result in results:
+        
+        if test_type == "AB":
+            parsed_results.append(PqTestABResult(**test_result))
+        elif test_type == "ABX":
+            parsed_results.append(PqTestABXResult(**test_result))
+        elif test_type == "MUSHRA":
+            parsed_results.append(PqTestMUSHRAResult(**test_result))
+        elif test_type == "APE":
+            parsed_results.append(PqTestAPEResult(**test_result))
+        else:
+            raise ValueError(f"Unknown test type: {test_result['type']}")
+    
+    return PqTestResultsList(results=parsed_results)
+
+
 def authenticate(session: Session, username: str, hashed_password: str) -> Admin | None:
     statement = select(Admin).where(Admin.username == username)
     try:

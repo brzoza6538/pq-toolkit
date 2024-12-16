@@ -23,6 +23,70 @@ class PqTestTypes(Enum):
     MUSHRA: str = "MUSHRA"
 
 
+
+class PqTestBaseResult(BaseModel):
+    uid: int | None = None
+
+    test_number: int = Field(
+        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
+    )
+
+
+
+
+class PqSelection(BaseModel):
+    question_id: str = Field(
+        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
+    )
+    sample_id: str = Field(
+        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
+    )
+
+
+class PqTestABResult(PqTestBaseResult):
+    selections: list[PqSelection]
+
+
+class PqTestABXResult(PqTestBaseResult):
+    x_sample_id: str = Field(alias="xSampleId")
+    x_selected: str = Field(alias="xSelected")
+    selections: list[PqSelection] | list
+
+
+class PqTestMUSHRAScore(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    score: int
+
+
+class PqTestMUSHRAResult(PqTestBaseResult):
+    reference_score: int = Field(alias="referenceScore")
+    anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
+    samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
+
+
+class PqTestAPESampleRating(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    rating: int
+
+
+class PqTestAPEAxisResult(BaseModel):
+    axis_id: str = Field(alias="axisId")
+    sample_ratings: list[PqTestAPESampleRating] = Field(alias="sampleRatings")
+
+
+class PqTestAPEResult(PqTestBaseResult):
+    axis_results: list[PqTestAPEAxisResult] = Field(alias="axisResults")
+
+
+class PqResultsList(BaseModel):
+    results: list[str]
+
+class PqTestResultsList(BaseModel):
+    results: list[
+        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
+    ]
+
+
 class PqSample(BaseModel):
     """
     Class representing sound sample.
@@ -71,7 +135,11 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
-    shit: int | None = None
+    #shit: int | None = None
+    #results: list[PqTestResultsList] | None = None
+
+    def __init__ (self):
+        print("waaaaaa")
 
 
 class PqTestAB(PqTestBase):
@@ -89,6 +157,22 @@ class PqTestAB(PqTestBase):
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
 
+    # results: list[PqTestResultsList] | None = None
+
+    # @field_validator("results", mode="before")  # noqa
+    # @classmethod
+    # def validate_results(cls, v: list  | None) -> list[PqTestABResult]:
+    #     if v is None:
+    #         return []
+
+    #     results_list = []
+
+    #     for result in v:
+    #         if isinstance(result, dict):
+    #             results_list.append(PqTestABResult(**result))
+    #         elif isinstance(result, PqTestABResult):
+    #             results_list.append(result)
+    #     return results_list
 
 class PqTestABX(PqTestBase):
     """
@@ -148,64 +232,6 @@ class PqTestAPE(PqTestBase):
     type: PqTestTypes = PqTestTypes.APE
 
 
-class PqTestBaseResult(BaseModel):
-    #uid: int | None = None
-
-    test_number: int = Field(
-        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
-    )
-
-
-
-
-class PqSelection(BaseModel):
-    question_id: str = Field(
-        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
-    )
-    sample_id: str = Field(
-        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
-    )
-
-
-class PqTestABResult(PqTestBaseResult):
-    selections: list[PqSelection]
-
-
-class PqTestABXResult(PqTestBaseResult):
-    x_sample_id: str = Field(alias="xSampleId")
-    x_selected: str = Field(alias="xSelected")
-    selections: list[PqSelection] | list
-
-
-class PqTestMUSHRAScore(BaseModel):
-    sample_id: str = Field(alias="sampleId")
-    score: int
-
-
-class PqTestMUSHRAResult(PqTestBaseResult):
-    reference_score: int = Field(alias="referenceScore")
-    anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
-    samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
-
-
-class PqTestAPESampleRating(BaseModel):
-    sample_id: str = Field(alias="sampleId")
-    rating: int
-
-
-class PqTestAPEAxisResult(BaseModel):
-    axis_id: str = Field(alias="axisId")
-    sample_ratings: list[PqTestAPESampleRating] = Field(alias="sampleRatings")
-
-
-class PqTestAPEResult(PqTestBaseResult):
-    axis_results: list[PqTestAPEAxisResult] = Field(alias="axisResults")
-
-
-class PqTestResultsList(BaseModel):
-    results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
-    ]
 
 
 class PqExperiment(BaseModel):
@@ -250,10 +276,6 @@ class PqExperiment(BaseModel):
 
 class PqExperimentsList(BaseModel):
     experiments: list[str]
-
-
-class PqResultsList(BaseModel):
-    results: list[str]
 
 
 class PqSuccessResponse(BaseModel):
