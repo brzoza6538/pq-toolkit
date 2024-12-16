@@ -13,6 +13,11 @@ import app.crud as crud
 router = APIRouter()
 
 
+@router.get("/showcase", response_model=dict[str, PqExperiment])
+def get_all(session: SessionDep):
+    return crud.get_all(session)
+
+
 @router.get("/", response_model=PqExperimentsList)
 def get_experiments(session: SessionDep):
     return crud.get_experiments(session)

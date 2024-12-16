@@ -135,30 +135,7 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
-    #shit: int | None = None
     results: list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult] | None = None
-
-    # @field_validator("results", mode="before")  # noqa
-    # @classmethod
-    # def validate_results(
-    #     cls, v: list
-    # ) -> list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]:
-    #     results_list = []
-    #     for result in v:
-    #         object_type = type(result)
-    #         if inspect.isclass(object_type) and issubclass(object_type, PqTestBase):
-    #             results_list.append(result)
-    #         else:
-    #             match PqTestTypes(result.get("type")):
-    #                 case PqTestTypes.AB:
-    #                     results_list.append(PqTestABResult(**result))
-    #                 case PqTestTypes.ABX:
-    #                     results_list.append(PqTestABXResult(**result))
-    #                 case PqTestTypes.APE:
-    #                     results_list.append(PqTestAPEResult(**result))
-    #                 case PqTestTypes.MUSHRA:
-    #                     results_list.append(PqTestMUSHRAResult(**result))
-    #     return results_list
 
 class PqTestAB(PqTestBase):
     """

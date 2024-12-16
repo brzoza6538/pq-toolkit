@@ -24,7 +24,6 @@ from app.schemas import (
 )
 from app.utils import PqException
 from pydantic import ValidationError
-from typing import Dict
 
 class ExperimentNotFound(PqException):
     def __init__(self, experiment_name: str) -> None:
@@ -72,6 +71,7 @@ class NoMatchingTest(PqException):
 class IncorrectInputData(PqException):
     def __init__(self, test_number: str) -> None:
         super().__init__(f"Incorect data in test result {test_number}!")
+
 
 
 def transform_test(test: Test) -> dict:
@@ -139,8 +139,7 @@ def transform_test_upload(test: PqTestBase) -> Test:
     test_dict.pop("uid")
     test_dict.pop("test_number")
     test_dict.pop("type")
-    test_dict.pop("results")
-    return Test(id=test.uid, number=test.test_number, type=test.type, test_setup=test_dict, experiment_test_results=results)
+    return Test(id=test.uid, number=test.test_number, type=test.type, test_setup=test_dict)
 
 
 def upload_experiment_config(
@@ -259,35 +258,12 @@ def get_experiment_tests_results(
         for result in test.experiment_test_results:
             if result_name is None or result.experiment_use == result_name:
                 results.append(transform_test_result(result, test.type))
-    
-    print("----------------------------------------------------------\n\n\n\n\n")
-    print("----------------------------------------------------------\n\n\n\n\n")
 
-    experiments = get_all(session)
-
-    print("----------------------------------------------------------\n\n\n\n\n")
-    #x = get_test_results(session=session, test_id=test.id).model_dump()
-    for uid, experiment in experiments.items():
-        print(f"UID: {uid}")
-        print(experiment.model_dump())  # Wyświetla dane w formacie słownika
-        print("-----")    
-    
-    print("----------------------------------------------------------\n\n\n\n\n")
-    print("----------------------------------------------------------\n\n\n\n\n")
-    print("----------------------------------------------------------\n\n\n\n\n")
 
     return PqTestResultsList(results=results)
 
 
-
-
-
-
-
-
-
-
-def get_test_results_by_id(session: Session, test_id: int) -> PqTestResultsList:
+def get_test_results_by_id(session: Session, test_id: int) -> list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]:
 
     statement = (
         select(
@@ -313,7 +289,7 @@ def get_test_results_by_id(session: Session, test_id: int) -> PqTestResultsList:
         elif test_type ==  PqTestTypes.APE:
             parsed_results.append(PqTestAPEResult(**test_result))
     
-    return PqTestResultsList(results=parsed_results)
+    return parsed_results
 
 
 def get_test_by_id(session: Session, test_id: int) -> PqTestAB | PqTestABX | PqTestMUSHRA | PqTestAPE :
@@ -331,11 +307,10 @@ def get_test_by_id(session: Session, test_id: int) -> PqTestAB | PqTestABX | PqT
                 "test_number": result.number,
                 "samples": result.test_setup["samples"],
                 "questions": result.test_setup["questions"],
-                "results": get_test_results(session, test_id)
+                "results": get_test_results_by_id(session, test_id)
             }
         )
     elif result.type == PqTestTypes.ABX:
-
         test_to_return = PqTestABX.model_validate(
             {
                 "uid": result.id,
@@ -343,7 +318,31 @@ def get_test_by_id(session: Session, test_id: int) -> PqTestAB | PqTestABX | PqT
                 "x_sample_id": result.test_setup["x_sample_id"],
                 "samples": result.test_setup["samples"],
                 "questions": result.test_setup["questions"],
-                "results": get_test_results(session, test_id)
+                "results": get_test_results_by_id(session, test_id)
+            }
+        ) 
+
+    elif result.type == PqTestTypes.MUSHRA:
+        test_to_return = PqTestMUSHRA.model_validate(
+            {
+                "uid": result.id,
+                "test_number": result.number,
+                "reference": result.test_setup["reference"],
+                "anchors": result.test_setup["anchors"],
+                "samples": result.test_setup["samples"],
+                "question": result.test_setup["question"],
+                "results": get_test_results_by_id(session, test_id)
+            }
+        ) 
+
+    elif result.type == PqTestTypes.APE:
+        test_to_return = PqTestAPE.model_validate(
+            {
+                "uid": result.id,
+                "test_number": result.number,
+                "axis": result.test_setup["axis"],
+                "samples": result.test_setup["samples"],
+                "results": get_test_results_by_id(session, test_id)
             }
         ) 
 
@@ -352,20 +351,18 @@ def get_test_by_id(session: Session, test_id: int) -> PqTestAB | PqTestABX | PqT
 
 
 
-def get_all(session: Session) -> Dict[str, PqExperiment]:
+def get_all(session: Session) -> dict[str, PqExperiment]:
 
-    experiment_dict: Dict[str, PqExperiment] = {}
+    experiment_dict: dict[str, PqExperiment] = {}
     experiments = session.exec(select(Experiment)).all()
     for experiment in experiments:
-        experiment_dict[experiment.id] = transform_experiment(experiment)
+        experiment_dict[str(experiment.id)] = transform_experiment(experiment)
 
-        for test in experiment_dict[experiment.id].tests:
+        for test in experiment_dict[str(experiment.id)].tests:
             test.results = get_test_results_by_id(session, test.uid)
 
 
     return experiment_dict
-
-
 
 
 def authenticate(session: Session, username: str, hashed_password: str) -> Admin | None:
