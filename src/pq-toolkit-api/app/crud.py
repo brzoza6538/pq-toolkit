@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
-from app.models import Experiment, Test, ExperimentTestResult, Admin
+from app.models import Experiment, Test, ExperimentTestResult, Admin, Sample
 from sqlmodel import Session, select
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
@@ -21,6 +21,7 @@ from app.schemas import (
     PqTestABX,
     PqTestMUSHRA,
     PqTestAPE,
+    PqSample
 )
 from app.utils import PqException
 from pydantic import ValidationError
@@ -263,6 +264,12 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
+def get_samples(session: Session) -> list[PqSample]:
+    samples = session.exec(select(Sample)).all()
+    return samples
+
+
+###TODO - error handling
 def get_test_results_by_id(session: Session, test_id: int) -> list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]:
 
     statement = (
