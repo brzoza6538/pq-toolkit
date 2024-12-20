@@ -7,7 +7,7 @@ from app.schemas import (
     PqSuccessResponse,
     PqExperiment,
     PqTestResultsList,
-    PqSample
+    PqSample,
 )
 import app.crud as crud
 
@@ -17,7 +17,6 @@ router = APIRouter()
 @router.get("/showcase", response_model=dict[str, PqExperiment])
 def get_all(session: SessionDep):
     return crud.get_all(session)
-
 
 
 @router.get("/samples", response_model=list[PqSample])
@@ -57,11 +56,6 @@ def delete_experiment(
 ):
     crud.remove_experiment_by_name(session, experiment_name.name)
     return crud.get_experiments(session)
-
-
-@router.get("/{experiment_name}/samples", response_model=list[str])
-def get_samples(sample_manager: SampleManagerDep, experiment_name: str):
-    return crud.get_experiment_samples(sample_manager, experiment_name)
 
 
 @router.post("/{experiment_name}/samples", response_model=PqSuccessResponse)

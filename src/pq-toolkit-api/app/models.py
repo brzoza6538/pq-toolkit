@@ -23,7 +23,7 @@ class Sample(SQLModel, table=True):
 
 
 class SampleRating(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)  
+    id: int | None = Field(default=None, primary_key=True)
     sample_id: int = Field(foreign_key="sample.id")
     rating: int
     sample: Sample = Relationship(back_populates="sampleRatings")

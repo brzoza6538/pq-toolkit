@@ -24,15 +24,12 @@ class PqTestTypes(Enum):
     MUSHRA: str = "MUSHRA"
 
 
-
 class PqTestBaseResult(BaseModel):
     uid: int | None = None
 
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
-
-
 
 
 class PqSelection(BaseModel):
@@ -82,13 +79,14 @@ class PqTestAPEResult(PqTestBaseResult):
 class PqResultsList(BaseModel):
     results: list[str]
 
+
 class PqTestResultsList(BaseModel):
     results: list[
         PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
     ]
 
 
-class average(BaseModel):
+class PqSample(BaseModel):
     """
     Class representing sound sample.
 
@@ -128,6 +126,7 @@ class PqTestBase(BaseModel):
         test_number: A number of the test.
         type: A type of the test.
     """
+
     uid: int | None = None
 
     model_config = ConfigDict(use_enum_values=True, validate_default=True)
@@ -136,7 +135,11 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
-    results: list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult] | None = None
+    results: (
+        list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]
+        | None
+    ) = None
+
 
 class PqTestAB(PqTestBase):
     """
@@ -153,7 +156,6 @@ class PqTestAB(PqTestBase):
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
     results: list[PqTestABResult] | None = None
-
 
 
 class PqTestABX(PqTestBase):
@@ -177,6 +179,7 @@ class PqTestABX(PqTestBase):
     questions: list[PqQuestion] | None = None
     type: PqTestTypes = PqTestTypes.ABX
     results: list[PqTestABXResult] | None = None
+
 
 class PqTestMUSHRA(PqTestBase):
     """
@@ -214,8 +217,6 @@ class PqTestAPE(PqTestBase):
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.APE
     results: list[PqTestAPEResult] | None = None
-
-
 
 
 class PqExperiment(BaseModel):
