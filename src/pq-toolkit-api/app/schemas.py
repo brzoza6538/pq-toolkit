@@ -3,6 +3,7 @@ from enum import Enum
 import inspect
 import uuid
 
+import copy 
 
 class AccessToken(BaseModel):
     access_token: str
@@ -24,12 +25,15 @@ class PqTestTypes(Enum):
     MUSHRA: str = "MUSHRA"
 
 
+
 class PqTestBaseResult(BaseModel):
     uid: int | None = None
 
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
+
+
 
 
 class PqSelection(BaseModel):
@@ -79,7 +83,6 @@ class PqTestAPEResult(PqTestBaseResult):
 class PqResultsList(BaseModel):
     results: list[str]
 
-
 class PqTestResultsList(BaseModel):
     results: list[
         PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
@@ -126,7 +129,6 @@ class PqTestBase(BaseModel):
         test_number: A number of the test.
         type: A type of the test.
     """
-
     uid: int | None = None
 
     model_config = ConfigDict(use_enum_values=True, validate_default=True)
@@ -135,11 +137,7 @@ class PqTestBase(BaseModel):
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
     type: PqTestTypes
-    results: (
-        list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]
-        | None
-    ) = None
-
+    results: list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult] | None = None
 
 class PqTestAB(PqTestBase):
     """
@@ -156,6 +154,7 @@ class PqTestAB(PqTestBase):
     questions: list[PqQuestion]
     type: PqTestTypes = PqTestTypes.AB
     results: list[PqTestABResult] | None = None
+
 
 
 class PqTestABX(PqTestBase):
@@ -180,7 +179,6 @@ class PqTestABX(PqTestBase):
     type: PqTestTypes = PqTestTypes.ABX
     results: list[PqTestABXResult] | None = None
 
-
 class PqTestMUSHRA(PqTestBase):
     """
     Base class for the MUSHRA test.
@@ -201,6 +199,32 @@ class PqTestMUSHRA(PqTestBase):
     type: PqTestTypes = PqTestTypes.MUSHRA
     results: list[PqTestMUSHRAResult] | None = None
 
+    
+###TODO - error handling
+    def get_average_results(self) -> PqTestMUSHRAResult:
+
+        average = PqTestMUSHRAResult(self.results[0])
+
+        for anchor in average.anchors_scores:
+            anchor.score = 0
+        for sample in average.samples_scores:
+            sample.score = 0
+        average.reference_score = 0
+
+        for result in self.results:
+            for i in range(len(average.anchors_scores)):
+                average.anchors_scores[i].score += result.anchors_scores[i].score
+            for i in range(len(average.samples_scores)):
+                average.samples_scores[i].score += result.samples_scores[i].score
+            average.reference_score += result.reference_score
+        
+        for anchor in average.anchors_scores:
+            anchor.score = int(anchor.score / len(self.results))
+        for sample in average.samples_scores:
+            sample.score = int(sample.score / len(self.results))
+        average.reference_score = int(average.reference_score / len(self.results))
+
+        return average
 
 class PqTestAPE(PqTestBase):
     """
@@ -217,6 +241,8 @@ class PqTestAPE(PqTestBase):
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.APE
     results: list[PqTestAPEResult] | None = None
+
+
 
 
 class PqExperiment(BaseModel):
