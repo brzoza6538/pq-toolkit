@@ -129,14 +129,23 @@ class SampleManager:
             response.release_conn()
 
     def get_sample(
-        self, experiment_name: str, sample_name: str, chunk_size: int = 1024 * 1024
+        self,
+        sample_name: str,
+        experiment_name: str | None = None,
+        chunk_size: int = 1024 * 1024,
     ):
-        object_name = self._object_name_from_experiment_and_sample(
-            experiment_name, sample_name
-        )
+        if experiment_name is None:
+            object_name = sample_name
 
-        if not self.check_sample_exists(experiment_name, sample_name):
-            raise SampleDoesNotExistError(object_name)
+            if not self._check_object_exists(object_name):
+                raise SampleDoesNotExistError(object_name)
+        else:
+            object_name = self._object_name_from_experiment_and_sample(
+                experiment_name, sample_name
+            )
+
+            if not self.check_sample_exists(experiment_name, sample_name):
+                raise SampleDoesNotExistError(object_name)
 
         try:
             response: HTTPResponse = self._client.get_object(

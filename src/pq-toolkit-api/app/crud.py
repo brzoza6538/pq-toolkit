@@ -173,7 +173,7 @@ def upload_experiment_config(
 def get_experiment_sample(
     manager: SampleManager, experiment_name: str, sample_name: str
 ) -> StreamingResponse:
-    sample_generator = manager.get_sample(experiment_name, sample_name)
+    sample_generator = manager.get_sample(sample_name, experiment_name=experiment_name)
     return StreamingResponse(sample_generator, media_type="audio/mpeg")
 
 

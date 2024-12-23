@@ -27,6 +27,11 @@ def get_all_samples(
     return crud.get_samples(sample_manager, first_result, max_results)
 
 
+@router.get("/samples/{filename}", response_model=UploadFile)
+async def get_sample(sample_manager: SampleManagerDep, filename: str):
+    return crud.get_sample(sample_manager, filename)
+
+
 @router.post("/samples", response_model=PqSuccessResponse)
 def upload_samples(
     sample_manager: SampleManagerDep,
