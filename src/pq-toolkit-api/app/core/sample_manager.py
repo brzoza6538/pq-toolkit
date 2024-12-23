@@ -171,5 +171,19 @@ class SampleManager:
             sample_names.append(sample_name)
         return sample_names
 
+    def list_all_samples(self, chunk_size: int = 1024 * 1024) -> list[str]:
+        sample_names = []
+        bucket_objects_iterator = self._client.list_objects(self._sample_bucket_name)
+
+        for obj in bucket_objects_iterator:
+            obj: minio.datatypes.Object
+            sample_name = obj.object_name.split("/")
+
+            if len(sample_name) == 1:
+                sample_name = sample_name[0]
+                sample_names.append(sample_name)
+
+        return sample_names
+
     def remove_all_samples(self):
         self._client.remove_bucket(self._sample_bucket_name)

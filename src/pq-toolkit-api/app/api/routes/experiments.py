@@ -20,6 +20,13 @@ def get_all(session: SessionDep):
     return crud.get_all(session)
 
 
+@router.get("/samples", response_model=list[str])
+def get_all_samples(
+    sample_manager: SampleManagerDep, first_result: int = 0, max_results: int = 10
+):
+    return crud.get_samples(sample_manager, first_result, max_results)
+
+
 @router.post("/samples", response_model=PqSuccessResponse)
 def upload_samples(
     sample_manager: SampleManagerDep,

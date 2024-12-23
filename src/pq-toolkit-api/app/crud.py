@@ -268,6 +268,17 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
+def get_samples(
+    manager: SampleManager, first_result: int, max_results: int
+) -> list[str]:
+    return manager.list_all_samples()[first_result : first_result + max_results]
+
+
+def get_sample(manager: SampleManager, filename: str) -> StreamingResponse:
+    sample_generator = manager.get_sample(filename)
+    return StreamingResponse(sample_generator, media_type="audio/mpeg")
+
+
 def upload_samples(manager: SampleManager, samples: list[UploadFile]):
     for sample in samples:
         sample_name = sample.filename
