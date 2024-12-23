@@ -93,6 +93,7 @@ class PqSample(BaseModel):
     Attributes:
         sample_id: An ID of the sample.
         asset_path: Path to the sample.
+        rating: Rating of the sample.
     """
 
     sample_id: str = Field(
@@ -101,6 +102,7 @@ class PqSample(BaseModel):
     asset_path: str = Field(
         alias="assetPath", validation_alias=AliasChoices("assetPath", "asset_path")
     )
+    rating: float | None = None
 
 
 class PqQuestion(BaseModel):

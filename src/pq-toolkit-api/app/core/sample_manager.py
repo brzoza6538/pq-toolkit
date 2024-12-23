@@ -98,11 +98,15 @@ class SampleManager:
         return self._check_object_exists(object_name)
 
     def upload_sample(
-        self, experiment_name: str, sample_name: str, sample_data: IOBase
+        self, sample_name: str, sample_data: IOBase, experiment_name: str | None = None
     ):
-        object_name = self._object_name_from_experiment_and_sample(
-            experiment_name, sample_name
-        )
+        if experiment_name is None:
+            object_name = sample_name
+        else:
+            object_name = self._object_name_from_experiment_and_sample(
+                experiment_name, sample_name
+            )
+
         try:
             self._client.put_object(
                 self._sample_bucket_name,

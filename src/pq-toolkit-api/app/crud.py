@@ -182,7 +182,7 @@ def upload_experiment_sample(
 ):
     sample_name = audio_file.filename
     sample_data = audio_file.file
-    manager.upload_sample(experiment_name, sample_name, sample_data)
+    manager.upload_sample(sample_name, sample_data, experiment_name=experiment_name)
 
 
 def delete_experiment_sample(
@@ -268,9 +268,11 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
-def get_samples(session: Session) -> list[PqSample]:
-    samples = session.exec(select(Sample)).all()
-    return samples
+def upload_samples(manager: SampleManager, samples: list[UploadFile]):
+    for sample in samples:
+        sample_name = sample.filename
+        sample_data = sample.file
+        manager.upload_sample(sample_name, sample_data)
 
 
 ###TODO - error handling

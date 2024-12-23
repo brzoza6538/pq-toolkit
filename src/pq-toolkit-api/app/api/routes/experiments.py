@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, Request
+from fastapi.responses import StreamingResponse
 
 from app.api.deps import SessionDep, SampleManagerDep, CurrentAdmin
 from app.schemas import (
@@ -19,9 +20,14 @@ def get_all(session: SessionDep):
     return crud.get_all(session)
 
 
-@router.get("/samples", response_model=list[PqSample])
-def get_samples(session: SessionDep):
-    return crud.get_samples(session)
+@router.post("/samples", response_model=PqSuccessResponse)
+def upload_samples(
+    sample_manager: SampleManagerDep,
+    admin: CurrentAdmin,
+    files: list[UploadFile],
+):
+    crud.upload_samples(sample_manager, files)
+    return PqSuccessResponse(success=True)
 
 
 @router.get("/", response_model=PqExperimentsList)
