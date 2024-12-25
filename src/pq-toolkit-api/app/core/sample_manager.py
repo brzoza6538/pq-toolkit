@@ -156,13 +156,19 @@ class SampleManager:
 
         return self._sample_data_generator(response, chunk_size)
 
-    def remove_sample(self, experiment_name: str, sample_name: str):
-        object_name = self._object_name_from_experiment_and_sample(
-            experiment_name, sample_name
-        )
+    def remove_sample(self, sample_name: str, experiment_name: str | None = None):
+        if experiment_name is None:
+            object_name = sample_name
 
-        if not self.check_sample_exists(experiment_name, sample_name):
-            raise SampleDoesNotExistError(object_name)
+            if not self._check_object_exists(object_name):
+                raise SampleDoesNotExistError(object_name)
+        else:
+            object_name = self._object_name_from_experiment_and_sample(
+                experiment_name, sample_name
+            )
+
+            if not self.check_sample_exists(experiment_name, sample_name):
+                raise SampleDoesNotExistError(object_name)
 
         self._client.remove_object(self._sample_bucket_name, object_name)
 

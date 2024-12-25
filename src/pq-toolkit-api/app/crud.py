@@ -188,7 +188,7 @@ def upload_experiment_sample(
 def delete_experiment_sample(
     manager: SampleManager, experiment_name: str, sample_name: str
 ):
-    manager.remove_sample(experiment_name, sample_name)
+    manager.remove_sample(sample_name, experiment_name=experiment_name)
 
 
 def get_experiment_samples(manager: SampleManager, experiment_name: str) -> list[str]:
@@ -277,6 +277,10 @@ def get_samples(
 def get_sample(manager: SampleManager, filename: str) -> StreamingResponse:
     sample_generator = manager.get_sample(filename)
     return StreamingResponse(sample_generator, media_type="audio/mpeg")
+
+
+def delete_sample(manager: SampleManager, sample_name: str):
+    manager.remove_sample(sample_name)
 
 
 def upload_samples(manager: SampleManager, samples: list[UploadFile]):

@@ -40,7 +40,7 @@ def test_manager_complete(
     for data in manager.get_sample(filename, experiment_name=experiment_name):
         assert data.decode() == message
 
-    manager.remove_sample(experiment_name, filename)
+    manager.remove_sample(filename, experiment_name=experiment_name)
 
 
 def test_manager_non_existent_file(sample_manager_localhost: SampleManager):
