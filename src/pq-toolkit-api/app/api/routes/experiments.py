@@ -52,6 +52,11 @@ def delete_sample(
     return PqSuccessResponse(success=True)
 
 
+@router.get("/samples/", response_model=list[str])
+def search_samples(sample_manager: SampleManagerDep, title: str):
+    return crud.search_samples_by_title(sample_manager, title)
+
+
 @router.get("/", response_model=PqExperimentsList)
 def get_experiments(session: SessionDep):
     return crud.get_experiments(session)

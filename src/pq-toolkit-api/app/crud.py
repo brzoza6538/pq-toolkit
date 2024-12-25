@@ -290,6 +290,14 @@ def upload_samples(manager: SampleManager, samples: list[UploadFile]):
         manager.upload_sample(sample_name, sample_data)
 
 
+def search_samples_by_title(manager: SampleManager, title: str) -> list[str]:
+    all_samples = manager.list_all_samples()
+    matching_samples = [
+        sample for sample in all_samples if title.lower() in sample.lower()
+    ]
+    return matching_samples
+
+
 ###TODO - error handling
 def get_test_results_by_id(
     session: Session, test_id: int
