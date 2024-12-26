@@ -1,5 +1,4 @@
 from fastapi import APIRouter, UploadFile, Request
-from fastapi.responses import StreamingResponse
 
 from app.api.deps import SessionDep, SampleManagerDep, CurrentAdmin
 from app.schemas import (
@@ -8,7 +7,6 @@ from app.schemas import (
     PqSuccessResponse,
     PqExperiment,
     PqTestResultsList,
-    PqSample,
 )
 import app.crud as crud
 
@@ -92,7 +90,7 @@ def delete_experiment(
 
 
 @router.post("/{experiment_name}/samples", response_model=PqSuccessResponse)
-def upload_sample(
+def upload_experiment_sample(
     sample_manager: SampleManagerDep,
     admin: CurrentAdmin,
     experiment_name: str,
@@ -103,7 +101,7 @@ def upload_sample(
 
 
 @router.get("/{experiment_name}/samples/{filename}", response_model=UploadFile)
-async def get_sample(
+async def get_experiment_sample(
     sample_manager: SampleManagerDep, experiment_name: str, filename: str
 ):
     return crud.get_experiment_sample(sample_manager, experiment_name, filename)
