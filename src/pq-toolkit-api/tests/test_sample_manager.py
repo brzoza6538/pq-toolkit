@@ -32,15 +32,15 @@ def test_manager_complete(
 
     filename = "test.wav"
     experiment_name = "test"
-    manager.upload_sample(experiment_name, filename, byte_stream_out)
+    manager.upload_sample(filename, byte_stream_out, experiment_name=experiment_name)
 
     machting_samples = manager.list_matching_samples(experiment_name)
     assert filename in machting_samples
 
-    for data in manager.get_sample(experiment_name, filename):
+    for data in manager.get_sample(filename, experiment_name=experiment_name):
         assert data.decode() == message
 
-    manager.remove_sample(experiment_name, filename)
+    manager.remove_sample(filename, experiment_name=experiment_name)
 
 
 def test_manager_non_existent_file(sample_manager_localhost: SampleManager):
@@ -49,5 +49,5 @@ def test_manager_non_existent_file(sample_manager_localhost: SampleManager):
             pass
 
     with pytest.raises(SampleDoesNotExistError):
-        for _ in sample_manager_localhost.get_sample("this", "does not exista again"):
+        for _ in sample_manager_localhost.get_sample("this", "does not exist again"):
             pass

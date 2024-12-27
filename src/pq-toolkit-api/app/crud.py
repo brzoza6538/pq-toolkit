@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
-from app.models import Experiment, Test, ExperimentTestResult, Admin, Sample
+from app.models import Experiment, Test, ExperimentTestResult, Admin
 from sqlmodel import Session, select
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
@@ -21,7 +21,6 @@ from app.schemas import (
     PqTestABX,
     PqTestMUSHRA,
     PqTestAPE,
-    PqSample,
 )
 from app.utils import PqException
 from pydantic import ValidationError
@@ -173,7 +172,7 @@ def upload_experiment_config(
 def get_experiment_sample(
     manager: SampleManager, experiment_name: str, sample_name: str
 ) -> StreamingResponse:
-    sample_generator = manager.get_sample(experiment_name, sample_name)
+    sample_generator = manager.get_sample(sample_name, experiment_name=experiment_name)
     return StreamingResponse(sample_generator, media_type="audio/mpeg")
 
 
@@ -182,13 +181,13 @@ def upload_experiment_sample(
 ):
     sample_name = audio_file.filename
     sample_data = audio_file.file
-    manager.upload_sample(experiment_name, sample_name, sample_data)
+    manager.upload_sample(sample_name, sample_data, experiment_name=experiment_name)
 
 
 def delete_experiment_sample(
     manager: SampleManager, experiment_name: str, sample_name: str
 ):
-    manager.remove_sample(experiment_name, sample_name)
+    manager.remove_sample(sample_name, experiment_name=experiment_name)
 
 
 def get_experiment_samples(manager: SampleManager, experiment_name: str) -> list[str]:
@@ -268,9 +267,34 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
-def get_samples(session: Session) -> list[PqSample]:
-    samples = session.exec(select(Sample)).all()
-    return samples
+def get_samples(
+    manager: SampleManager, first_result: int, max_results: int
+) -> list[str]:
+    return manager.list_all_samples()[first_result : first_result + max_results]
+
+
+def get_sample(manager: SampleManager, filename: str) -> StreamingResponse:
+    sample_generator = manager.get_sample(filename)
+    return StreamingResponse(sample_generator, media_type="audio/mpeg")
+
+
+def delete_sample(manager: SampleManager, sample_name: str):
+    manager.remove_sample(sample_name)
+
+
+def upload_samples(manager: SampleManager, samples: list[UploadFile]):
+    for sample in samples:
+        sample_name = sample.filename
+        sample_data = sample.file
+        manager.upload_sample(sample_name, sample_data)
+
+
+def search_samples_by_title(manager: SampleManager, title: str) -> list[str]:
+    all_samples = manager.list_all_samples()
+    matching_samples = [
+        sample for sample in all_samples if title.lower() in sample.lower()
+    ]
+    return matching_samples
 
 
 ###TODO - error handling
