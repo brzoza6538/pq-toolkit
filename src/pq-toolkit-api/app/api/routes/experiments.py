@@ -7,6 +7,7 @@ from app.schemas import (
     PqSuccessResponse,
     PqExperiment,
     PqTestResultsList,
+    PqSamplesRatings
 )
 import app.crud as crud
 
@@ -18,11 +19,9 @@ def get_all(session: SessionDep):
     return crud.get_all(session)
 
 
-@router.get("/samples", response_model=list[str])
-def get_all_samples(
-    sample_manager: SampleManagerDep, first_result: int = 0, max_results: int = 10
-):
-    return crud.get_samples(sample_manager, first_result, max_results)
+@router.get("/samples", response_model=list[PqSamplesRatings])
+def get_all_samples(session: SessionDep, sample_manager: SampleManagerDep, first_result: int = 0, max_results: int = 10):
+    return crud.get_samples(session, sample_manager, first_result, max_results)
 
 
 @router.get("/samples/{filename}", response_model=UploadFile)
@@ -41,12 +40,8 @@ def upload_samples(
 
 
 @router.delete("/samples/{filename}", response_model=PqSuccessResponse)
-def delete_sample(
-    sample_manager: SampleManagerDep,
-    admin: CurrentAdmin,
-    filename: str,
-):
-    crud.delete_sample(sample_manager, filename)
+def delete_sample(session: SessionDep, sample_manager: SampleManagerDep, admin: CurrentAdmin, filename: str):
+    crud.delete_sample(session, sample_manager, filename)
     return PqSuccessResponse(success=True)
 
 
@@ -138,3 +133,8 @@ async def upload_results(
 )
 def get_test_results(session: SessionDep, experiment_name: str, result_name: str):
     return crud.get_experiment_tests_results(session, experiment_name, result_name)
+
+@router.post("/samples/{filename}/rate/{rating}", response_model=PqSuccessResponse)
+def add_sample_rating(session: SessionDep, sample_manager: SampleManagerDep, filename: str, rating: int):
+    crud.add_sample_rating(session, sample_manager, filename, rating)
+    return PqSuccessResponse(success=True)
