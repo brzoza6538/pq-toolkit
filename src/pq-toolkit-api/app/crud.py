@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
-from app.models import Experiment, Test, ExperimentTestResult, Admin
+from app.models import Experiment, Test, ExperimentTestResult, Admin, SampleRating
 from sqlmodel import Session, select
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
@@ -21,6 +21,7 @@ from app.schemas import (
     PqTestABX,
     PqTestMUSHRA,
     PqTestAPE,
+    PqSamplesRatings
 )
 from app.utils import PqException
 from pydantic import ValidationError
@@ -73,6 +74,11 @@ class NoMatchingTest(PqException):
 class IncorrectInputData(PqException):
     def __init__(self, test_number: str) -> None:
         super().__init__(f"Incorect data in test result {test_number}!")
+
+
+class SampleNotFound(PqException):
+    def __init__(self, filename: str) -> None:
+        super().__init__(f"sample {filename} does not exist", error_code=404)
 
 
 def transform_test(test: Test) -> dict:
@@ -267,10 +273,19 @@ def get_experiment_tests_results(
     return PqTestResultsList(results=results)
 
 
-def get_samples(
-    manager: SampleManager, first_result: int, max_results: int
-) -> list[str]:
-    return manager.list_all_samples()[first_result : first_result + max_results]
+def get_samples(session: Session, manager: SampleManager, first_result: int, max_results: int) -> list[PqSamplesRatings]:
+    samples = manager.list_all_samples()[first_result : first_result + max_results]
+    samples_ratings = []
+    
+    for filename in samples:
+        ratings = session.exec(select(SampleRating.rating).where(SampleRating.filename == filename)).all()
+        if ratings:
+            average_rating = sum(ratings) / len(ratings)
+        else:
+            average_rating = 0.0
+        samples_ratings.append(PqSamplesRatings(filename=filename, average_rating=average_rating))
+    
+    return samples_ratings
 
 
 def get_sample(manager: SampleManager, filename: str) -> StreamingResponse:
@@ -278,8 +293,12 @@ def get_sample(manager: SampleManager, filename: str) -> StreamingResponse:
     return StreamingResponse(sample_generator, media_type="audio/mpeg")
 
 
-def delete_sample(manager: SampleManager, sample_name: str):
+def delete_sample(session: Session, manager: SampleManager, sample_name: str):
     manager.remove_sample(sample_name)
+    ratings = session.exec(select(SampleRating).where(SampleRating.filename == sample_name)).all()
+    for rating in ratings:
+        session.delete(rating)
+    session.commit()
 
 
 def upload_samples(manager: SampleManager, samples: list[UploadFile]):
@@ -405,3 +424,13 @@ def authenticate(session: Session, username: str, hashed_password: str) -> Admin
     except NoResultFound:
         return None
     return user if user.hashed_password == hashed_password else None
+
+
+def add_sample_rating(session: Session, manager: SampleManager, filename: str, rating: int):
+    samples = manager.list_all_samples()
+    if filename in samples:
+        new_rating = SampleRating(filename=filename, rating=rating)
+        session.add(new_rating)
+        session.commit()
+    else:
+        raise SampleNotFound(filename)

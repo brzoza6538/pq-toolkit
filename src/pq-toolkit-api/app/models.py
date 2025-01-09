@@ -19,14 +19,15 @@ class Sample(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str = Field(index=True)
     file_path: str
-    sampleRatings: list["SampleRating"] = Relationship(back_populates="sample")
+    #sampleRatings: list["SampleRating"] = Relationship(back_populates="sample")
 
 
 class SampleRating(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    sample_id: int = Field(foreign_key="sample.id")
+    #sample_id: int = Field(foreign_key="sample.id")
+    filename: str
     rating: int
-    sample: Sample = Relationship(back_populates="sampleRatings")
+    #sample: Sample = Relationship(back_populates="sampleRatings")
 
 
 class Experiment(SQLModel, table=True):

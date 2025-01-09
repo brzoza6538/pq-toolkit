@@ -279,3 +279,7 @@ class PqApiStatus(BaseModel):
 
 class PqExperimentName(BaseModel):
     name: str
+
+class PqSamplesRatings(BaseModel):
+    filename: str
+    average_rating: float
