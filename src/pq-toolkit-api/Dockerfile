@@ -1,12 +1,10 @@
 FROM python:3.11-slim
 
+RUN apt update && apt-get install -y make
+
 RUN pip install poetry
 
-RUN apt update
-RUN apt-get install -y make
-
 WORKDIR /app/
-
 ENV PYTHONPATH=/app
 ARG ENVIRONMENT=production
 
