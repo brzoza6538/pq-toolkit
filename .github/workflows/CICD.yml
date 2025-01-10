@@ -107,23 +107,17 @@ jobs:
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
-      - name: check_that
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
+      - name: check containers
+        run: |
+          docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
+          # Opcjonalnie: czekaj na start kontenera (jeśli potrzebne)
+          sleep 10 # Czas w sekundach, który daje kontenerowi na uruchomienie
 
       - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
-      - name: wait for container to be ready
-        run: |
-          echo "Waiting for service to be ready..."
-          while ! docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev curl -s http://localhost:8000; do
-            echo "Waiting for service to be ready...";
-            sleep 2;
-          done
-          echo "Service is ready!"
-
       - name: tests
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
+        run: docker compose -f src/deployments/docker-compose.yml --env-file e
 
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
