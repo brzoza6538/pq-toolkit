@@ -79,10 +79,6 @@ jobs:
       - name: build docker dev image
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
 
-      - name: stop dev docker
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev down
-
-
       # Upload the env.dev file as artifact if needed
       - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
@@ -103,7 +99,7 @@ jobs:
           name: env-file
 
       - name: start docker
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up --build -d
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
       - name: check_that
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
