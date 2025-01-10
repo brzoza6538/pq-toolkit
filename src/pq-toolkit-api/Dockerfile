@@ -12,6 +12,7 @@ ARG ENVIRONMENT=production
 
 COPY pyproject.toml poetry.lock ./
 
+RUN poetry lock --no-interaction --no-ansi
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install $(test "$ENVIRONMENT" = production && echo "--only=main") --no-interaction --no-ansi --no-root
 
 COPY . .
