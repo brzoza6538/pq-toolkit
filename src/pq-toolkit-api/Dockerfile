@@ -19,7 +19,7 @@ RUN poetry install --no-interaction --no-ansi $( [ "$ENVIRONMENT" = "production"
 
 RUN poetry show
 
-COPY . .
+COPY . /app
 
 RUN chmod +x prestart.sh
 
