@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir poetry==2.0.0
 
 WORKDIR /app
+
+RUN python --version
+
 ENV PYTHONPATH=./
 ENV PATH="$PATH:/root/.local/bin"
 
