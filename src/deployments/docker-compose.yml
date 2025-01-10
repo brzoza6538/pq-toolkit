@@ -43,6 +43,8 @@ services:
       MINIO_ENDPOINT: pq-sample-storage-minio-dev
       MINIO_STORAGE_USE_HTTPS: $MINIO_STORAGE_USE_HTTPS
       PQ_API_PORT: 8787
+      ENVIRONMENT: "local"   # Add the ENVIRONMENT variable here
+
     command: sh -c "./prestart.sh && python3 main.py"
     volumes:
       - ../pq-toolkit-api/app:/app/app
