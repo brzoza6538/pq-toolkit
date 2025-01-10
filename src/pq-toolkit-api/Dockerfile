@@ -14,6 +14,8 @@ RUN poetry lock --no-interaction --no-ansi
 
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install $( [ "$ENVIRONMENT" = "production" ] && echo "--only=main" || echo "--dev" ) --no-interaction --no-ansi --no-root
 
+RUN poetry show
+
 COPY . .
 
 RUN chmod +x prestart.sh
