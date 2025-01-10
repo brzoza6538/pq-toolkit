@@ -88,17 +88,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: env-file
-
-      - name: check_that
-        run: docker-compose -f src/deployments/docker-compose.yml --env-file env.dev ps
-
-      - name: logs
-        run: docker-compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
-
+          
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
-
  
+      - name: check_that
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
+
+      - name: logs
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
+
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
