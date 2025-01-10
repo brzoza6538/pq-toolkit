@@ -1,7 +1,7 @@
 [project]
-name = "your_project_name"  # Ensure this is properly set
+name = "app"
 version = "0.1.0"
-description = "Description of your project"
+description = "API for the PQ toolkit project written in FastAPI"
 requires-python = ">=3.11"
 
 authors = [
