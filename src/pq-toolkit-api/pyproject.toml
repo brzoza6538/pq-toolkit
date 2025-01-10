@@ -9,6 +9,8 @@ authors = [
 ]
 readme = "README.md"
 
+packages = [{ include = "app" }]
+
 [tool.poetry.dependencies]
 # Main dependencies
 python = "^3.11"
@@ -31,7 +33,7 @@ iniconfig = "1.1.1"
 jmespath = "1.0.1"
 minio = "7.2.5"
 packaging = "23.2"
-pip = "23.3.1" 
+pip = "23.3.1"
 pluggy = "1.0.0"
 pycparser = "2.22"
 pycryptodome = "3.20.0"
@@ -64,4 +66,3 @@ pytest = "7.4.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
