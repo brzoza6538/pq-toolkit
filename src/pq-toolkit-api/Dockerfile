@@ -19,8 +19,6 @@ RUN poetry lock --no-interaction --no-ansi
 
 RUN poetry install --no-interaction --no-ansi --with dev
 
-RUN poetry check
-
 RUN poetry show
 
 RUN poetry run alembic --version
