@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir poetry
 
 WORKDIR /app
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=./
 ENV PATH="$PATH:/root/.local/bin"
 
 COPY README.md pyproject.toml poetry.lock prestart.sh ./
@@ -24,10 +24,10 @@ RUN poetry show
 
 RUN poetry run alembic --version
 
+COPY . /app
+
 RUN chmod +x prestart.sh
 
 EXPOSE 8787
-
-COPY . /app
 
 CMD ["./prestart.sh"]
