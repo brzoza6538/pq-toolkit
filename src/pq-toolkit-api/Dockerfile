@@ -4,8 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir poetry==2.0.0
-
+RUN pip install --no-cache-dir
 WORKDIR /app
 
 RUN python --version
