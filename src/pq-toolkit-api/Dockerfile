@@ -11,7 +11,7 @@ COPY pyproject.toml poetry.lock ./
 COPY README.md ./
 
 RUN poetry lock --no-interaction --no-ansi
-RUN poetry install $( [ "$ENVIRONMENT" = "production" ] && echo "--only=main" || echo "--dev" ) --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi $( [ "$ENVIRONMENT" = "production" ] && echo "--without dev" || echo "--with dev" )
 
 RUN poetry show
 
