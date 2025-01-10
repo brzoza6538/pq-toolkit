@@ -48,7 +48,7 @@ jobs:
    steps:
       - uses: actions/checkout@v4
 
-      - name: make  .env.prod file
+      - name: make .env.prod file
         run: cp src/deployments/.env.prod.sample src/deployments/.env.prod
 
       - name: build docker prod image
@@ -57,7 +57,6 @@ jobs:
       - name: stop prod docker
         run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
 
-
       - name: make .env.stage file
         run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
         
@@ -65,8 +64,7 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
 
       - name: stop stage docker
-        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
-
+        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage down
 
       - name: make .env.dev file
         run: cp src/deployments/.env.dev.sample env.dev
@@ -74,7 +72,6 @@ jobs:
       - name: build docker dev image
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
 
-            
       - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -114,7 +111,6 @@ jobs:
 
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
-       
 
 # 4 ----------------------------------------------------------------------------------------------------
  cleanup:
