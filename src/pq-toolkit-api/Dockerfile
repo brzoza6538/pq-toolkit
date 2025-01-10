@@ -7,7 +7,7 @@ RUN pip install poetry
 WORKDIR /app/
 ENV PYTHONPATH=/app
 
-COPY . ./app
+COPY . .
 
 RUN ls -l /app
 RUN ls -l ./
