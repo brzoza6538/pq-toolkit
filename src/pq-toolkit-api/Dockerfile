@@ -13,7 +13,7 @@ RUN python --version
 ENV PYTHONPATH=./
 ENV PATH="$PATH:/root/.local/bin"
 
-COPY pyproject.toml ./
+COPY pyproject.toml README.md ./
 RUN poetry lock --no-interaction --no-ansi
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install $(test "$ENVIRONMENT" == production && echo "--only=main") --no-interaction --no-ansi
 
