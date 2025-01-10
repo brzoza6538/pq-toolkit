@@ -28,6 +28,6 @@ RUN chmod +x prestart.sh
 
 EXPOSE 8787
 
-COPY . .
+COPY . /app
 
 CMD ["./prestart.sh"]
