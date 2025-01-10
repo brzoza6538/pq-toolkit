@@ -18,6 +18,9 @@ RUN poetry show
 
 RUN chmod +x prestart.sh
 
+ENV PATH="$PATH:/root/.local/bin"
+
 EXPOSE 8787
 
 CMD ["./prestart.sh"]
+
