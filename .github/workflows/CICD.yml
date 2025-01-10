@@ -93,6 +93,10 @@ jobs:
         with:
           name: env-file
       
+      
+      - name: cheeeeeeeeeck
+        run: docker stats pq-toolkit-api-dev
+
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up --build -d
 
@@ -102,6 +106,9 @@ jobs:
       - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
+      - name: cheeeeeefeeeck
+        run: docker stats pq-toolkit-api-dev
+
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
@@ -110,7 +117,7 @@ jobs:
        
 
 # 4 ----------------------------------------------------------------------------------------------------
-  cleanup:
+ cleanup:
     runs-on: ubuntu-latest
     needs: check_code
     
@@ -122,10 +129,8 @@ jobs:
         with:
           name: env-file
 
-      - name: cleanup after docker
-        run: |
-          docker compose -f src/deployments/docker-compose.yml --env-file env.dev down --volumes --remove-orphans
-          docker system prune -af
-
+      - name: stop dev docker
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev down
+   
       - name: remove env.dev file
         run: rm -f env.dev
