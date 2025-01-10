@@ -43,11 +43,12 @@ jobs:
         
 # 2 ----------------------------------------------------------------------------------------------------
   check_docker:
-   runs-on: ubuntu-latest
-   needs: setup 
-   steps:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
       - uses: actions/checkout@v4
 
+      # Check and build prod environment
       - name: make .env.prod file
         run: cp src/deployments/.env.prod.sample src/deployments/.env.prod
 
@@ -57,14 +58,20 @@ jobs:
       - name: stop prod docker
         run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
 
+      - name: remove prod environment files
+        run: rm -f src/deployments/.env.prod
+
       - name: make .env.stage file
         run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
-        
+
       - name: build docker stage image
         run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
 
       - name: stop stage docker
         run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage down
+
+      - name: remove stage environment files
+        run: rm -f src/deployments/.env.stage
 
       - name: make .env.dev file
         run: cp src/deployments/.env.dev.sample env.dev
@@ -72,6 +79,11 @@ jobs:
       - name: build docker dev image
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
 
+      - name: stop dev docker
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev down
+
+
+      # Upload the env.dev file as artifact if needed
       - name: upload env.dev as artifact
         uses: actions/upload-artifact@v4
         with:
