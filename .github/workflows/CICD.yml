@@ -116,6 +116,9 @@ jobs:
       - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
+      - name: logs-2
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-gateway
+
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file e
 
