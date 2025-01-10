@@ -1,30 +1,32 @@
 FROM python:3.11-slim
 
-RUN apt update && apt-get install -y make
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    make \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install poetry
+RUN pip install --no-cache-dir poetry
 
 WORKDIR /app
 ENV PYTHONPATH=/app
+ENV PATH="$PATH:/root/.local/bin"
 
-COPY . .
+COPY README.md pyproject.toml poetry.lock prestart.sh ./
 
 RUN poetry check
 
 RUN rm -f poetry.lock && poetry lock --no-interaction --no-ansi
 
-RUN poetry config virtualenvs.create false 
 RUN poetry install --no-interaction --no-ansi --with dev
 
-RUN poetry show
+RUN poetry show 
 
 RUN poetry run alembic --version
 
 RUN chmod +x prestart.sh
 
-ENV PATH="$PATH:/root/.local/bin"
-
 EXPOSE 8787
+
+COPY . .
 
 CMD ["./prestart.sh"]
 
