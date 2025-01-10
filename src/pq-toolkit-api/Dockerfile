@@ -19,4 +19,9 @@ COPY . .
 
 RUN chmod +x prestart.sh
 
+RUN ls -l /app
+
+RUN ls -l ./
+
+
 EXPOSE 8787
