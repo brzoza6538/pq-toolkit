@@ -118,6 +118,10 @@ jobs:
         with:
           name: env-file
 
+      - name: cleanup after docker
+        run: |
+          docker compose -f src/deployments/docker-compose.yml --env-file env.dev down --volumes --remove-orphans
+          docker system prune -af
 
-      - name: stop dev docker
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev down
+      - name: remove env.dev file
+        run: rm -f env.dev
