@@ -9,6 +9,7 @@ ENV PYTHONPATH=/app
 
 COPY . .
 
+RUN poetry lock --no-interaction --no-ansi
 RUN poetry install --no-interaction --no-ansi --with dev
 
 RUN chmod +x prestart.sh
