@@ -1,15 +1,15 @@
-[tool.poetry]
+[project]
 name = "app"
 version = "0.1.0"
 description = "API for the PQ toolkit project written in FastAPI"
 authors = [
     "Jan Kowalczewski <official.jan.kk@gmail.com>",
     "Igor Matynia <igor.matynia@gmail.com>",
-    "JakubWozniak <JakubWozniak2211@hotmail.com>"
+    "Jakub Wozniak <JakubWozniak2211@hotmail.com>"
 ]
 readme = "README.md"
 
-[tool.poetry.dependencies]
+[project.dependencies]
 # Main dependencies
 python = "^3.11"
 annotated-types = "0.6.0"
@@ -31,7 +31,7 @@ iniconfig = "1.1.1"
 jmespath = "1.0.1"
 minio = "7.2.5"
 packaging = "23.2"
-pip = "23.3.1" 
+pip = "23.3.1"
 pluggy = "1.0.0"
 pycparser = "2.22"
 pycryptodome = "3.20.0"
@@ -57,9 +57,11 @@ psycopg-binary = "3.1.19"
 tenacity = "8.3.0"
 pyjwt = "2.8.0"
 
-[tool.poetry.group.dev.dependencies]
-ruff = "0.4.6"
-pytest = "7.4.0"
+[project.optional-dependencies]
+dev = [
+    "ruff = '0.4.6'",
+    "pytest = '7.4.0'"
+]
 
 [build-system]
 requires = ["poetry-core"]
