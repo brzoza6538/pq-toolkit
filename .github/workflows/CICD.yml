@@ -90,10 +90,10 @@ jobs:
           name: env-file
 
       - name: check_that
-        run: docker-compose -f src/deployments/docker-compose.yml --env-file env.dev ps
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
 
       - name: logs
-        run: docker-compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
