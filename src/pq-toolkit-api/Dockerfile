@@ -10,7 +10,8 @@ WORKDIR /app
 ENV PYTHONPATH=./
 ENV PATH="$PATH:/root/.local/bin"
 
-COPY README.md pyproject.toml poetry.lock prestart.sh ./
+#COPY README.md pyproject.toml poetry.lock prestart.sh ./
+COPY . /app
 
 RUN rm -f poetry.lock
 
@@ -23,8 +24,6 @@ RUN poetry check
 RUN poetry show
 
 RUN poetry run alembic --version
-
-COPY . /app
 
 RUN chmod +x prestart.sh
 
