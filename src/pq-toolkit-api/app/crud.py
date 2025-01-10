@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
-from app.models import Experiment, Test, ExperimentTestResult, Admin, SampleRating
+from app.models import Experiment, Test, ExperimentTestResult, Admin, Sample, SampleRating
 from sqlmodel import Session, select
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
@@ -21,7 +21,8 @@ from app.schemas import (
     PqTestABX,
     PqTestMUSHRA,
     PqTestAPE,
-    PqSamplesRatings
+    PqSamplesRatings,
+    PqSample,
 )
 from app.utils import PqException
 from pydantic import ValidationError
