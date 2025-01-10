@@ -3,9 +3,9 @@ name = "app"
 version = "0.1.0"
 description = "API for the PQ toolkit project written in FastAPI"
 authors = [
-    { name = "Jan Kowalczewski", email = "official.jan.kk@gmail.com" },
-    { name = "Igor Matynia", email = "igor.matynia@gmail.com" },
-    { name = "JakubWozniak", email = "JakubWozniak2211@hotmail.com" }
+    "Jan Kowalczewski <official.jan.kk@gmail.com>",
+    "Igor Matynia <igor.matynia@gmail.com>",
+    "JakubWozniak <JakubWozniak2211@hotmail.com>" 
 ]
 
 [project.dependencies]
