@@ -90,6 +90,9 @@ jobs:
         with:
           name: env-file
 
+      - name: start docker
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up --build -d
+
       - name: check_that
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
 
