@@ -17,7 +17,8 @@ COPY . /app
 
 RUN poetry lock --no-interaction --no-ansi
 
-RUN poetry install --no-interaction --no-ansi --with dev
+RUN POETRY_VIRTUALENVS_CREATE=false poetry install $(test "$ENVIRONMENT" == production && echo "--only=main") --no-interaction --no-ansi
+
 
 RUN poetry show
 
