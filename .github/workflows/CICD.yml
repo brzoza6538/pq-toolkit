@@ -68,7 +68,7 @@ jobs:
         run: cp src/deployments/.env.dev.sample env.dev
 
       - name: build docker dev image
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev build --no-cache
 
             
       - name: upload env.dev as artifact

@@ -16,6 +16,8 @@ RUN poetry install --no-interaction --no-ansi --with dev
 
 RUN poetry show
 
+RUN poetry run alembic --version
+
 RUN chmod +x prestart.sh
 
 ENV PATH="$PATH:/root/.local/bin"
