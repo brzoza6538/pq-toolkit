@@ -1,4 +1,4 @@
-[project]
+[tool.poetry]
 name = "app"
 version = "0.1.0"
 description = "API for the PQ toolkit project written in FastAPI"
@@ -9,7 +9,7 @@ authors = [
 ]
 readme = "README.md"
 
-[project.dependencies]
+[tool.poetry.dependencies]
 # Main dependencies
 python = "^3.11"
 annotated-types = "0.6.0"
@@ -57,7 +57,7 @@ psycopg-binary = "3.1.19"
 tenacity = "8.3.0"
 pyjwt = "2.8.0"
 
-[project.group.dev.dependencies]
+[tool.poetry.group.dev.dependencies]
 ruff = "0.4.6"
 pytest = "7.4.0"
 
