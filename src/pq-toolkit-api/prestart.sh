@@ -1,14 +1,10 @@
-#!/usr/bin/env bash
-
-# Debug: Check installed Python packages
-pip list
+#! /usr/bin/env bash
 
 # Let the DB start
 python app/backend_pre_start.py
 
 # Run migrations
 if [ "$ENVIRONMENT" != "local" ]; then
-    which alembic
     alembic upgrade head
 fi
 

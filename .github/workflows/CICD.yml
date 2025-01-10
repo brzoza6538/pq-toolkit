@@ -107,17 +107,15 @@ jobs:
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
-      - name: check containers
-        run: |
-          docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
-          # Opcjonalnie: czekaj na start kontenera (jeśli potrzebne)
-          sleep 10 # Czas w sekundach, który daje kontenerowi na uruchomienie
+      - name: check_that
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
 
       - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
+
       - name: tests
-        run: docker compose -f src/deployments/docker-compose.yml --env-file e
+        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
       - name: linter
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make lint
