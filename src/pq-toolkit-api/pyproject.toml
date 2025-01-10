@@ -1,12 +1,13 @@
-[tool.poetry]
-name = "app"
+[project]
+name = "your_project_name"  # Ensure this is properly set
 version = "0.1.0"
-description = "API for the PQ toolkit project written in FastAPI"
+description = "Description of your project"
 authors = [
     "Jan Kowalczewski <official.jan.kk@gmail.com>",
     "Igor Matynia <igor.matynia@gmail.com>",
-    "JakubWozniak <JakubWozniak2211@hotmail.com>" 
+    "JakubWozniak <JakubWozniak2211@hotmail.com>"
 ]
+
 
 [project.dependencies]
 python = "^3.11"
