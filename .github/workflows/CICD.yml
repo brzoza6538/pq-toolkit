@@ -111,9 +111,6 @@ jobs:
       - name: logs
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev logs pq-toolkit-api-dev
 
-      - name: cheeeeeefeeeck
-        run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev stats pq-toolkit-api-dev
-
       - name: tests
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev exec pq-toolkit-api-dev make test
 
