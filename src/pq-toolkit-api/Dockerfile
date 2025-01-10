@@ -14,11 +14,12 @@ COPY README.md pyproject.toml poetry.lock prestart.sh ./
 
 RUN poetry check
 
-RUN rm -f poetry.lock && poetry lock --no-interaction --no-ansi
+RUN rm -f poetry.lock
+RUN poetry lock --no-interaction --no-ansi
 
 RUN poetry install --no-interaction --no-ansi --with dev
 
-RUN poetry show 
+RUN poetry show
 
 RUN poetry run alembic --version
 
@@ -29,4 +30,3 @@ EXPOSE 8787
 COPY . .
 
 CMD ["./prestart.sh"]
-
