@@ -13,11 +13,7 @@ ENV PATH="$PATH:/root/.local/bin"
 #COPY README.md pyproject.toml poetry.lock prestart.sh ./
 COPY . /app
 
-RUN rm -f poetry.lock
-
-RUN poetry lock --no-interaction --no-ansi
-
-RUN poetry install --no-interaction --no-ansi --with dev
+RUN poetry install --no-interaction --no-cache --without dev
 
 RUN poetry show
 
