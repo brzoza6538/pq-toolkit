@@ -1,5 +1,4 @@
 [tool.poetry]
-package-mode = false
 name = "app"
 version = "0.1.0"
 description = "API for the PQ toolkit project written in FastAPI"
