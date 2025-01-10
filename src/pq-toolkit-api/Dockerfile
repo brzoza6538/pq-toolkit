@@ -10,6 +10,10 @@ ENV PYTHONPATH=/app
 COPY pyproject.toml poetry.lock ./
 COPY README.md ./
 
+
+RUN ls -l /app
+RUN ls -l ./
+
 RUN poetry lock --no-interaction --no-ansi
 RUN poetry install --no-interaction --no-ansi $( [ "$ENVIRONMENT" = "production" ] && echo "--without dev" || echo "--with dev" )
 
@@ -19,9 +23,6 @@ COPY . .
 
 RUN chmod +x prestart.sh
 
-RUN ls -l /app
-
-RUN ls -l ./
 
 
 EXPOSE 8787
