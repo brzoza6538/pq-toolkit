@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - setup-fixing
   pull_request:
     branches:
       - main
+      - setup-fixing
 
 permissions:
   contents: write
