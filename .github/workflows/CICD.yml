@@ -82,18 +82,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: check1
-        run: ls -al
-      
       - name: get env.dev artifact
         uses: actions/download-artifact@v4
         with:
           name: env-file
 
-      - name: check2
-        run: ls -al
-
-        
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
 
