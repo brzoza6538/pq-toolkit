@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir poetry
+RUN pip install --no-cache-dir poetry==2.0.0
 
 WORKDIR /app
 ENV PYTHONPATH=./
@@ -13,7 +13,9 @@ ENV PATH="$PATH:/root/.local/bin"
 #COPY README.md pyproject.toml poetry.lock prestart.sh ./
 COPY . /app
 
-RUN poetry install --no-interaction --no-cache --without dev
+RUN poetry lock --no-interaction --no-ansi
+
+RUN poetry install --no-interaction --no-ansi --with dev
 
 RUN poetry show
 
