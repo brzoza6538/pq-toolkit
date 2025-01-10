@@ -10,13 +10,17 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app
 ENV PATH="$PATH:/root/.local/bin"
+ENV ENVIRONMENT=development
 
 COPY pyproject.toml README.md ./
 COPY app ./app
 
 RUN poetry lock --no-interaction --no-ansi
-RUN POETRY_VIRTUALENVS_CREATE=false poetry install $(test "$ENVIRONMENT" == production && echo "--only=main") --no-interaction --no-ansi
-RUN poetry install --no-interaction --no-ansi
+RUN if [ "$ENVIRONMENT" = "production" ]; then \
+    poetry install --no-dev --no-interaction --no-ansi; \
+    else \
+    poetry install --no-interaction --no-ansi; \
+    fi
 
 COPY . /app
 
