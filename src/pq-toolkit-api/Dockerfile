@@ -4,22 +4,15 @@ RUN apt update && apt-get install -y make
 
 RUN pip install poetry
 
-WORKDIR /app/
+WORKDIR /app
 ENV PYTHONPATH=/app
 
 COPY . .
 
-RUN ls -l /app
-RUN ls -l ./
-
-RUN poetry lock --no-interaction --no-ansi
-RUN poetry install --no-interaction --no-ansi $( [ "$ENVIRONMENT" = "production" ] && echo "--without dev" || echo "--with dev" )
-
-RUN poetry show
-
+RUN poetry install --no-interaction --no-ansi --with dev
 
 RUN chmod +x prestart.sh
 
-
-
 EXPOSE 8787
+
+CMD ["./prestart.sh"]
