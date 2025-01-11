@@ -7,8 +7,6 @@ RUN apt update && apt-get install -y make && apt-get clean && \
 WORKDIR /app/
 
 ENV PYTHONPATH=/app
-ARG ENVIRONMENT=development
-ENV ENVIRONMENT=$ENVIRONMENT
 
 COPY pyproject.toml poetry.lock ./
 RUN if [ "$ENVIRONMENT" = "production" ]; then \
