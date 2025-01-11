@@ -14,9 +14,12 @@ ENV ENVIRONMENT=development
 
 COPY pyproject.toml README.md ./ 
 
-RUN poetry config virtualenvs.create false \
-    && poetry install $(if [ "$ENVIRONMENT" = "production" ]; then echo "--no-dev"; fi) --no-interaction --no-ansi
-
+ARG ENVIRONMENT=development
+RUN if [ "$ENVIRONMENT" = "production" ]; then \
+    poetry install --no-dev --no-interaction --no-ansi; \
+    else \
+    poetry install --no-interaction --no-ansi; \
+    fi
 COPY . /app
 
 RUN chmod +x prestart.sh
