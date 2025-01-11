@@ -42,6 +42,16 @@ jobs:
    steps:
       - uses: actions/checkout@v4
       
+      - name: make .env.stage file
+        run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
+        
+      - name: build docker stage image
+        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
+
+      - name: stop stage docker
+        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage down
+
+
       - name: make .env.dev file
         run: cp src/deployments/.env.dev.sample env.dev
 
