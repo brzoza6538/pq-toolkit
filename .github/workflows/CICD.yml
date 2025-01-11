@@ -106,11 +106,14 @@ jobs:
 
       - name: start docker
         run: docker compose -f src/deployments/docker-compose.yml --env-file env.dev up -d
+
         
       - name: wait you fuckerrrrrrrrrrrrrr
         run: sleep 30
 
-        
+
+      - name: check containers
+        run: |
           docker compose -f src/deployments/docker-compose.yml --env-file env.dev ps
           # Opcjonalnie: czekaj na start kontenera (jeśli potrzebne)
           sleep 10 # Czas w sekundach, który daje kontenerowi na uruchomienie
