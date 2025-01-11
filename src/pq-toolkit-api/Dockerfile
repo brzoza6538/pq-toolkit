@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir poetry
+RUN pip install poetry
 
 WORKDIR /app
 
@@ -16,6 +16,8 @@ COPY pyproject.toml README.md ./
 COPY app ./app
 
 RUN poetry lock --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false 
+
 RUN if [ "$ENVIRONMENT" = "production" ]; then \
     poetry install --no-dev --no-interaction --no-ansi; \
     else \
