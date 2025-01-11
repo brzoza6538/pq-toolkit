@@ -47,6 +47,9 @@ services:
     command: sh -c "./prestart.sh && python3 main.py"
     volumes:
       - ../pq-toolkit-api/app:/app/app
+    mem_limit: 4g
+    memswap_limit: 8g 
+    cpus: 2
 
   # Frontend
   pq-toolkit-ui-dev:
