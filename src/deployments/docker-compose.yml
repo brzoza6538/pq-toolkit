@@ -42,6 +42,7 @@ services:
       MINIO_ROOT_PASSWORD: $MINIO_ROOT_PASSWORD
       MINIO_ENDPOINT: pq-sample-storage-minio-dev
       MINIO_STORAGE_USE_HTTPS: $MINIO_STORAGE_USE_HTTPS
+      ENVIRONMENT: production
       PQ_API_PORT: 8787
     command: sh -c "./prestart.sh && python3 main.py"
     volumes:
