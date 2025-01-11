@@ -41,17 +41,7 @@ jobs:
    needs: setup 
    steps:
       - uses: actions/checkout@v4
-
-      - name: make  .env.prod file
-        run: cp src/deployments/.env.prod.sample src/deployments/.env.prod
-
-      - name: build docker prod image
-        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod build
-
-      - name: stop prod docker
-        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
-
-
+      
       - name: make .env.stage file
         run: cp src/deployments/.env.stage.sample src/deployments/.env.stage
         
