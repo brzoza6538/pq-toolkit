@@ -109,7 +109,7 @@ jobs:
 
         
       - name: wait you fuckerrrrrrrrrrrrrr
-        run: sleep 30
+        run: sleep 120
 
 
       - name: check containers
