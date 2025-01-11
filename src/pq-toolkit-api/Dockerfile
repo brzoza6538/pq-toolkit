@@ -10,9 +10,9 @@ ENV PYTHONPATH=/app
 
 COPY pyproject.toml poetry.lock ./
 RUN if [ "$ENVIRONMENT" = "production" ]; then \
-      POETRY_VIRTUALENVS_CREATE=false poetry install --only=main --no-interaction --no-ansi --no-root; \
+      POETRY_VIRTUALENVS_CREATE=false poetry install --only=main --no-interaction --no-ansi; \
     else \
-      POETRY_VIRTUALENVS_CREATE=false poetry install --no-interaction --no-ansi --no-root; \
+      POETRY_VIRTUALENVS_CREATE=false poetry install --no-interaction --no-ansi; \
     fi
 
 COPY . .
