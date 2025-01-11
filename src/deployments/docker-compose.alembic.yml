@@ -40,6 +40,7 @@ services:
       MINIO_ENDPOINT: $MINIO_ENDPOINT
       MINIO_STORAGE_USE_HTTPS: $MINIO_STORAGE_USE_HTTPS
       PQ_API_PORT: $PQ_API_PORT
+      ENVIRONMENT: development
     command: sh -c "bash"
     volumes:
       - ../pq-toolkit-api/app:/app/app
