@@ -17,12 +17,7 @@ COPY app ./app
 
 RUN poetry lock --no-interaction --no-ansi
 RUN poetry config virtualenvs.create false 
-
-RUN if [ "$ENVIRONMENT" = "production" ]; then \
-    poetry install --no-dev --no-interaction --no-ansi; \
-    else \
-    poetry install --no-interaction --no-ansi; \
-    fi
+RUN poetry install --no-interaction --no-ansi
 
 COPY . /app
 
