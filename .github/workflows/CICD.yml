@@ -49,7 +49,7 @@ jobs:
         run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage build
 
       - name: stop stage docker
-        run: docker compose -f src/deployments/docker-compose.prod.yml --env-file src/deployments/.env.prod down
+        run: docker compose -f src/deployments/docker-compose.stage.yml --env-file src/deployments/.env.stage down
 
 
       - name: make .env.dev file
