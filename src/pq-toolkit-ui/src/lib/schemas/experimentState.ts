@@ -101,6 +101,34 @@ export const MUSHRAResultSchema = BaseResultSchema.extend({
 export type MUSHRAResult = z.infer<typeof MUSHRAResultSchema>
 
 /**
+ * Defines PEAQ test result
+ * Scores of all samples on scale from 0 to 100
+ */
+export const PEAQResultSchema = BaseResultSchema.extend({
+	referenceScore: z.number().min(0).max(100),
+	anchorsScores: z.array(
+	  z.object({
+		sampleId: z.string().min(1),
+		score: z.number().min(0).max(100)
+	  })
+	),
+	samplesScores: z.array(
+	  z.object({
+		sampleId: z.string().min(1),
+		score: z.number().min(0).max(100)
+	  })
+	)
+  })
+
+/**
+ * Type from {@link PEAQResultSchema}
+ * Defines PEAQ test result
+ * @field referenceScore - score of reference sample
+ * @field anchorsScores - array of scores for anchor samples
+ * @field samplesScores - array of scores for samples
+ */
+export type PEAQResult = z.infer<typeof PEAQResultSchema>
+/**
  * Defines APE test result
  * User must rate each sample on a scale from 0 to 100
  * for each of the questions

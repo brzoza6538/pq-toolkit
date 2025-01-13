@@ -4,12 +4,14 @@ import ABTestComponent from '@/lib/components/experiments/ABTestComponent'
 import ABXTestComponent from '@/lib/components/experiments/ABXTestComponent'
 import APETestComponent from '@/lib/components/experiments/APETestComponent'
 import MUSHRATestComponent from '@/lib/components/experiments/MUSHRATestComponent'
+import PEAQTestComponent from '@/lib/components/experiments/PEAQTestComponent'
 import {
   TestTypeEnum,
   type ABTest,
   type APETest,
   type FullABXTest,
-  type FullMUSHRATest
+  type FullMUSHRATest,
+  type FullPEAQTest
 } from '@/lib/schemas/experimentSetup'
 import Link from 'next/link'
 import { useContext, useState } from 'react'
@@ -21,6 +23,7 @@ import {
   type ABResult,
   type ABXResult,
   type MUSHRAResult,
+  type PEAQResult,
   type APEResult
 } from '@/lib/schemas/experimentState'
 import Header from '@/lib/components/basic/header'
@@ -104,6 +107,22 @@ const TestPage = ({
             feedback={feedback}
           />
         )
+	  case TestTypeEnum.enum.PEAQ:
+		return (
+		  <PEAQTestComponent
+			testData={currentTest as FullPEAQTest}
+			initialValues={
+			  results.results.find(
+				(r) => r.testNumber === currentTest.testNumber
+			  ) as PartialResult<PEAQResult>
+			}
+			experimentName={name}
+			setAnswer={(result) => {
+			  context?.setAnswer(result)
+			}}
+			feedback={feedback}
+		  />
+		)
       case TestTypeEnum.enum.APE:
         return (
           <APETestComponent

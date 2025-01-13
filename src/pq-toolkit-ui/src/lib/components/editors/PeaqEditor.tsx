@@ -7,20 +7,20 @@ import {
   type ExperimentSetup,
   type FullABXTest,
   type MUSHRATest,
-  type PEAQTest,
+  type PEAQTest
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
 import { getSampleUrl } from '../experiments/common/utils'
 import Playback from '../player/Playback'
 
-const MushraEditor = ({
+const PeaqEditor = ({
   experimentName,
   currentTest,
   setCurrentTest,
   fileList,
   setSetup
 }: {
-  currentTest: MUSHRATest
+  currentTest: PEAQTest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
       ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
@@ -293,4 +293,4 @@ const MushraEditor = ({
     </div>
   )
 }
-export default MushraEditor
+export default PeaqEditor

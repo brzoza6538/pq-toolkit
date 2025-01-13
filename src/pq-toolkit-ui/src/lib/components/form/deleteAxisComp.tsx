@@ -6,6 +6,7 @@ import {
   type BaseTest,
   type FullABXTest,
   type MUSHRATest,
+  type PEAQTest,
   type APETest,
   type Question
 } from '@/lib/schemas/experimentSetup'
@@ -14,10 +15,10 @@ interface DeleteAxisCompProps {
   index: number
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
     >
   >
-  currentTest: ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+  currentTest: ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
 }
 
 const DeleteAxisComp = (props: DeleteAxisCompProps): JSX.Element => {

@@ -6,7 +6,8 @@ import {
   type BaseTest,
   type ExperimentSetup,
   type FullABXTest,
-  type MUSHRATest
+  type MUSHRATest,
+  type PEAQTest
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
@@ -24,7 +25,7 @@ const AbxEditor = ({
   currentTest: ABXTest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
     >
   >
   fileList: File[]

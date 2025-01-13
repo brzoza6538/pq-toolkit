@@ -49,7 +49,7 @@ def upgrade():
     op.create_table('test',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('number', sa.Integer(), nullable=False),
-    sa.Column('type', sa.Enum('AB', 'ABX', 'APE', 'MUSHRA', name='pqtesttypes'), nullable=False),
+    sa.Column('type', sa.Enum('AB', 'ABX', 'APE', 'MUSHRA', 'PEAQ', name='pqtesttypes'), nullable=False),
     sa.Column('test_setup', sa.JSON(), nullable=True),
     sa.Column('experiment_id', sqlmodel.sql.sqltypes.GUID(), nullable=False),
     sa.ForeignKeyConstraint(['experiment_id'], ['experiment.id'], ),

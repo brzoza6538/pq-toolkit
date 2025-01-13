@@ -5,7 +5,9 @@ import {
   type ABXTest,
   type FullABXTest,
   type MUSHRATest,
-  type FullMUSHRATest
+  type FullMUSHRATest,
+  type PEAQTest,
+  type FullPEAQTest
 } from '@/lib/schemas/experimentSetup'
 
 export const fillTest = (test: BaseTest): BaseTest => {
@@ -14,6 +16,8 @@ export const fillTest = (test: BaseTest): BaseTest => {
       return fillABXTest(test as ABXTest)
     case 'MUSHRA':
       return fillMUSHRATest(test as MUSHRATest)
+	case 'PEAQ':
+		return fillPEAQTest(test as PEAQTest)
   }
 
   return test
@@ -38,3 +42,15 @@ export const fillMUSHRATest = (test: MUSHRATest): FullMUSHRATest => {
     samplesShuffle: samplesShuffle.map((sample) => sample.sampleId)
   }
 }
+
+export const fillPEAQTest = (test: PEAQTest): FullPEAQTest => {
+	const { samples, reference, anchors } = test
+	const samplesCombined = [...samples, ...anchors, reference]
+	const samplesShuffle = shuffleArray(samplesCombined)
+  
+	return {
+	  ...test,
+	  samplesShuffle: samplesShuffle.map((sample) => sample.sampleId)
+	}
+  }
+  

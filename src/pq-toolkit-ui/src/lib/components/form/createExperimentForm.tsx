@@ -17,6 +17,7 @@ import {
   type ABXTest,
   type FullABXTest,
   type MUSHRATest,
+  type PEAQTest,
   type APETest,
   type BaseTest
 } from '@/lib/schemas/experimentSetup'
@@ -36,6 +37,7 @@ import {
 import AbEditor from '../editors/AbEditor'
 import AbxEditor from '../editors/AbxEditor'
 import MushraEditor from '../editors/MushraEditor'
+import PeaqEditor from '../editors/PeaqEditor'
 import ApeEditor from '../editors/ApeEditor'
 
 function generateRandomString(): string {
@@ -112,7 +114,7 @@ const CreateExperimentForm = ({
     tests: []
   })
   const [currentTest, setCurrentTest] = useState<
-    ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest
+    ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
   >({
     testNumber: -1,
     type: 'AB',
@@ -225,7 +227,7 @@ const CreateExperimentForm = ({
   }
 
   const areAllFilesProvided = (
-    test: ABTest | ABXTest | FullABXTest | MUSHRATest | APETest | BaseTest,
+    test: ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest,
     fileList: File[]
   ): boolean => {
     if (Object.prototype.hasOwnProperty.call(test, 'reference')) {
@@ -752,6 +754,40 @@ const CreateExperimentForm = ({
                 <label className="flex items-center relative cursor-pointer mr-2">
                   <input
                     type="radio"
+                    value="PEAQ"
+                    name="type"
+                    checked={currentTest.type === 'PEAQ'}
+                    onClick={(e) => {
+                      setCurrentTest({
+                        ...currentTest,
+                        type: (e.target as HTMLTextAreaElement)
+                          .value as 'PEAQ',
+                        anchors: [],
+                        reference: { sampleId: '', assetPath: '' }
+                      })
+                    }}
+                    className="hidden"
+                  />
+                  <span
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                      currentTest.type === 'PEAQ'
+                        ? 'bg-pink-500 border-pink-500 dark:bg-pink-600 dark:border-pink-600'
+                        : 'bg-gray-200 border-gray-400'
+                    } transition-transform transform hover:scale-110 duration-100 ease-in-out`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        currentTest.type === 'PEAQ'
+                          ? 'bg-white dark:bg-gray-100'
+                          : ''
+                      }`}
+                    ></span>
+                  </span>
+                  <span className="ml-2">PEAQ</span>
+                </label>
+                <label className="flex items-center relative cursor-pointer mr-2">
+                  <input
+                    type="radio"
                     value="AB"
                     name="type"
                     checked={currentTest.type === 'AB'}
@@ -861,6 +897,16 @@ const CreateExperimentForm = ({
                       setSetup={setSetup}
                     />
                   )
+				case 'PEAQ':
+				  return (
+				    <PeaqEditor
+					  experimentName={setup.name}
+					  currentTest={currentTest as PEAQTest}
+					  setCurrentTest={setCurrentTest}
+					  fileList={fileList}
+					  setSetup={setSetup}
+				    />
+				  )
                 case 'AB':
                   return (
                     <AbEditor

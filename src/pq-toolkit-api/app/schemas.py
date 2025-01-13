@@ -22,6 +22,7 @@ class PqTestTypes(Enum):
     ABX: str = "ABX"
     APE: str = "APE"
     MUSHRA: str = "MUSHRA"
+    PEAQ: str = "PEAQ"
 
 
 class PqSample(BaseModel):
@@ -129,6 +130,26 @@ class PqTestMUSHRA(PqTestBase):
     anchors: list[PqSample]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.MUSHRA
+    
+
+class PqTestPEAQ(PqTestBase):
+    """
+    Base class for the PEAQ test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+        reference: A reference sample
+        question: A question for the test
+        anchors: list of anchor samples associated with the test
+        samples: list of samples associated with the test
+    """
+
+    reference: PqSample
+    question: str | None = None
+    anchors: list[PqSample]
+    samples: list[PqSample]
+    type: PqTestTypes = PqTestTypes.PEAQ
 
 
 class PqTestAPE(PqTestBase):
@@ -177,10 +198,21 @@ class PqTestMUSHRAScore(BaseModel):
     score: int
 
 
+class PqTestPEAQScore(BaseModel):
+    sample_id: str = Field(alias="sampleId")
+    score: int
+
+
 class PqTestMUSHRAResult(PqTestBaseResult):
     reference_score: int = Field(alias="referenceScore")
     anchors_scores: list[PqTestMUSHRAScore] = Field(alias="anchorsScores")
     samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
+
+
+class PqTestPEAQResult(PqTestBaseResult):
+    reference_score: int = Field(alias="referenceScore")
+    anchors_scores: list[PqTestPEAQScore] = Field(alias="anchorsScores")
+    samples_scores: list[PqTestPEAQScore] = Field(alias="samplesScores")
 
 
 class PqTestAPESampleRating(BaseModel):
@@ -199,7 +231,7 @@ class PqTestAPEResult(PqTestBaseResult):
 
 class PqTestResultsList(BaseModel):
     results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
+        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestPEAQResult | PqTestAPEResult
     ]
 
 
@@ -218,13 +250,13 @@ class PqExperiment(BaseModel):
     name: str
     description: str
     end_text: str | None = Field(alias="endText", default=None)
-    tests: list[PqTestMUSHRA | PqTestAPE | PqTestABX | PqTestAB]
+    tests: list[PqTestMUSHRA | PqTestPEAQ | PqTestAPE | PqTestABX | PqTestAB]
 
     @field_validator("tests", mode="before")  # noqa
     @classmethod
     def validate_tests(
         cls, v: list
-    ) -> list[PqTestMUSHRA | PqTestAPE | PqTestABX | PqTestAB]:
+    ) -> list[PqTestMUSHRA | PqTestPEAQ | PqTestAPE | PqTestABX | PqTestAB]:
         tests_list = []
         for test in v:
             object_type = type(test)
@@ -240,6 +272,8 @@ class PqExperiment(BaseModel):
                         tests_list.append(PqTestAPE(**test))
                     case PqTestTypes.MUSHRA:
                         tests_list.append(PqTestMUSHRA(**test))
+                    case PqTestTypes.PEAQ:
+                        tests_list.append(PqTestPEAQ(**test))
         return tests_list
 
 
