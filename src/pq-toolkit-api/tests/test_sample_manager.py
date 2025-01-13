@@ -12,7 +12,7 @@ def example_byte_stream():
 @pytest.fixture
 def sample_manager_localhost():
     return SampleManager(
-        endpoint="pq-sample-storage-minio-dev",
+        endpoint="localhost",
         port=9000,
         access_key="minioadmin",
         secret_key="minioadmin",
@@ -32,15 +32,15 @@ def test_manager_complete(
 
     filename = "test.wav"
     experiment_name = "test"
-    manager.upload_sample(filename, byte_stream_out, experiment_name=experiment_name)
+    manager.upload_sample(experiment_name, filename, byte_stream_out)
 
     machting_samples = manager.list_matching_samples(experiment_name)
     assert filename in machting_samples
 
-    for data in manager.get_sample(filename, experiment_name=experiment_name):
+    for data in manager.get_sample(experiment_name, filename):
         assert data.decode() == message
 
-    manager.remove_sample(filename, experiment_name=experiment_name)
+    manager.remove_sample(experiment_name, filename)
 
 
 def test_manager_non_existent_file(sample_manager_localhost: SampleManager):
@@ -49,5 +49,5 @@ def test_manager_non_existent_file(sample_manager_localhost: SampleManager):
             pass
 
     with pytest.raises(SampleDoesNotExistError):
-        for _ in sample_manager_localhost.get_sample("this", "does not exist again"):
+        for _ in sample_manager_localhost.get_sample("this", "does not exista again"):
             pass

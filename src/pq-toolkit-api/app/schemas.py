@@ -24,9 +24,130 @@ class PqTestTypes(Enum):
     MUSHRA: str = "MUSHRA"
 
 
-class PqTestBaseResult(BaseModel):
-    uid: int | None = None
+class PqSample(BaseModel):
+    """
+    Class representing sound sample.
 
+    Attributes:
+        sample_id: An ID of the sample.
+        asset_path: Path to the sample.
+    """
+
+    sample_id: str = Field(
+        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
+    )
+    asset_path: str = Field(
+        alias="assetPath", validation_alias=AliasChoices("assetPath", "asset_path")
+    )
+
+
+class PqQuestion(BaseModel):
+    """
+    Class representing test question.
+
+    Attributes:
+        question_id: An ID of the question.
+        text: Text of the question.
+    """
+
+    question_id: str = Field(
+        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
+    )
+    text: str
+
+
+class PqTestBase(BaseModel):
+    """
+    Base class for the test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+    """
+
+    model_config = ConfigDict(use_enum_values=True, validate_default=True)
+
+    test_number: int = Field(
+        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
+    )
+    type: PqTestTypes
+
+
+class PqTestAB(PqTestBase):
+    """
+    Base class for the AB test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+        samples: list of samples associated with the test
+        questions: list of questions for the test
+    """
+
+    samples: list[PqSample]
+    questions: list[PqQuestion]
+    type: PqTestTypes = PqTestTypes.AB
+
+
+class PqTestABX(PqTestBase):
+    """
+    Base class for the ABX test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+        x_sample_id: Unknown sample id - the one to identify
+        samples: list of samples associated with the test
+        questions: list of questions for the test
+    """
+
+    x_sample_id: str | None = Field(
+        None,
+        alias="xSampleId",
+        validation_alias=AliasChoices("xSampleId", "x_sample_id"),
+    )
+    samples: list[PqSample]
+    questions: list[PqQuestion] | None = None
+    type: PqTestTypes = PqTestTypes.ABX
+
+
+class PqTestMUSHRA(PqTestBase):
+    """
+    Base class for the MUSHRA test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+        reference: A reference sample
+        question: A question for the test
+        anchors: list of anchor samples associated with the test
+        samples: list of samples associated with the test
+    """
+
+    reference: PqSample
+    question: str | None = None
+    anchors: list[PqSample]
+    samples: list[PqSample]
+    type: PqTestTypes = PqTestTypes.MUSHRA
+
+
+class PqTestAPE(PqTestBase):
+    """
+    Base class for the APE test.
+
+    Attributes:
+        test_number: A number of the test.
+        type: A type of the test.
+        axis: A list of axis questions
+        samples: list of samples associated with the test
+    """
+
+    axis: list[PqQuestion]
+    samples: list[PqSample]
+    type: PqTestTypes = PqTestTypes.APE
+
+
+class PqTestBaseResult(BaseModel):
     test_number: int = Field(
         alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
     )
@@ -76,149 +197,10 @@ class PqTestAPEResult(PqTestBaseResult):
     axis_results: list[PqTestAPEAxisResult] = Field(alias="axisResults")
 
 
-class PqResultsList(BaseModel):
-    results: list[str]
-
-
 class PqTestResultsList(BaseModel):
     results: list[
         PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestAPEResult
     ]
-
-
-class PqSample(BaseModel):
-    """
-    Class representing sound sample.
-
-    Attributes:
-        sample_id: An ID of the sample.
-        asset_path: Path to the sample.
-        rating: Rating of the sample.
-    """
-
-    sample_id: str = Field(
-        alias="sampleId", validation_alias=AliasChoices("sampleId", "sample_id")
-    )
-    asset_path: str = Field(
-        alias="assetPath", validation_alias=AliasChoices("assetPath", "asset_path")
-    )
-    rating: float | None = None
-
-
-class PqQuestion(BaseModel):
-    """
-    Class representing test question.
-
-    Attributes:
-        question_id: An ID of the question.
-        text: Text of the question.
-    """
-
-    question_id: str = Field(
-        alias="questionId", validation_alias=AliasChoices("questionId", "question_id")
-    )
-    text: str
-
-
-class PqTestBase(BaseModel):
-    """
-    Base class for the test.
-
-    Attributes:
-        test_number: A number of the test.
-        type: A type of the test.
-    """
-
-    uid: int | None = None
-
-    model_config = ConfigDict(use_enum_values=True, validate_default=True)
-
-    test_number: int = Field(
-        alias="testNumber", validation_alias=AliasChoices("testNumber", "test_number")
-    )
-    type: PqTestTypes
-    results: (
-        list[PqTestMUSHRAResult | PqTestAPEResult | PqTestABXResult | PqTestABResult]
-        | None
-    ) = None
-
-
-class PqTestAB(PqTestBase):
-    """
-    Base class for the AB test.
-
-    Attributes:
-        test_number: A number of the test.
-        type: A type of the test.
-        samples: list of samples associated with the test
-        questions: list of questions for the test
-    """
-
-    samples: list[PqSample]
-    questions: list[PqQuestion]
-    type: PqTestTypes = PqTestTypes.AB
-    results: list[PqTestABResult] | None = None
-
-
-class PqTestABX(PqTestBase):
-    """
-    Base class for the ABX test.
-
-    Attributes:
-        test_number: A number of the test.
-        type: A type of the test.
-        x_sample_id: Unknown sample id - the one to identify
-        samples: list of samples associated with the test
-        questions: list of questions for the test
-    """
-
-    x_sample_id: str | None = Field(
-        None,
-        alias="xSampleId",
-        validation_alias=AliasChoices("xSampleId", "x_sample_id"),
-    )
-    samples: list[PqSample]
-    questions: list[PqQuestion] | None = None
-    type: PqTestTypes = PqTestTypes.ABX
-    results: list[PqTestABXResult] | None = None
-
-
-class PqTestMUSHRA(PqTestBase):
-    """
-    Base class for the MUSHRA test.
-
-    Attributes:
-        test_number: A number of the test.
-        type: A type of the test.
-        reference: A reference sample
-        question: A question for the test
-        anchors: list of anchor samples associated with the test
-        samples: list of samples associated with the test
-    """
-
-    reference: PqSample
-    question: str | None = None
-    anchors: list[PqSample]
-    samples: list[PqSample]
-    type: PqTestTypes = PqTestTypes.MUSHRA
-    results: list[PqTestMUSHRAResult] | None = None
-
-
-class PqTestAPE(PqTestBase):
-    """
-    Base class for the APE test.
-
-    Attributes:
-        test_number: A number of the test.
-        type: A type of the test.
-        axis: A list of axis questions
-        samples: list of samples associated with the test
-    """
-
-    axis: list[PqQuestion]
-    samples: list[PqSample]
-    type: PqTestTypes = PqTestTypes.APE
-    results: list[PqTestAPEResult] | None = None
 
 
 class PqExperiment(BaseModel):
@@ -265,6 +247,10 @@ class PqExperimentsList(BaseModel):
     experiments: list[str]
 
 
+class PqResultsList(BaseModel):
+    results: list[str]
+
+
 class PqSuccessResponse(BaseModel):
     success: bool
 
@@ -279,7 +265,3 @@ class PqApiStatus(BaseModel):
 
 class PqExperimentName(BaseModel):
     name: str
-
-class PqSamplesRatings(BaseModel):
-    filename: str
-    average_rating: float

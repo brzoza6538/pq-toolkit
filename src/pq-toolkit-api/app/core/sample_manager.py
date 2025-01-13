@@ -98,15 +98,11 @@ class SampleManager:
         return self._check_object_exists(object_name)
 
     def upload_sample(
-        self, sample_name: str, sample_data: IOBase, experiment_name: str | None = None
+        self, experiment_name: str, sample_name: str, sample_data: IOBase
     ):
-        if experiment_name is None:
-            object_name = sample_name
-        else:
-            object_name = self._object_name_from_experiment_and_sample(
-                experiment_name, sample_name
-            )
-
+        object_name = self._object_name_from_experiment_and_sample(
+            experiment_name, sample_name
+        )
         try:
             self._client.put_object(
                 self._sample_bucket_name,
@@ -129,23 +125,14 @@ class SampleManager:
             response.release_conn()
 
     def get_sample(
-        self,
-        sample_name: str,
-        experiment_name: str | None = None,
-        chunk_size: int = 1024 * 1024,
+        self, experiment_name: str, sample_name: str, chunk_size: int = 1024 * 1024
     ):
-        if experiment_name is None:
-            object_name = sample_name
+        object_name = self._object_name_from_experiment_and_sample(
+            experiment_name, sample_name
+        )
 
-            if not self._check_object_exists(object_name):
-                raise SampleDoesNotExistError(object_name)
-        else:
-            object_name = self._object_name_from_experiment_and_sample(
-                experiment_name, sample_name
-            )
-
-            if not self.check_sample_exists(experiment_name, sample_name):
-                raise SampleDoesNotExistError(object_name)
+        if not self.check_sample_exists(experiment_name, sample_name):
+            raise SampleDoesNotExistError(object_name)
 
         try:
             response: HTTPResponse = self._client.get_object(
@@ -156,19 +143,13 @@ class SampleManager:
 
         return self._sample_data_generator(response, chunk_size)
 
-    def remove_sample(self, sample_name: str, experiment_name: str | None = None):
-        if experiment_name is None:
-            object_name = sample_name
+    def remove_sample(self, experiment_name: str, sample_name: str):
+        object_name = self._object_name_from_experiment_and_sample(
+            experiment_name, sample_name
+        )
 
-            if not self._check_object_exists(object_name):
-                raise SampleDoesNotExistError(object_name)
-        else:
-            object_name = self._object_name_from_experiment_and_sample(
-                experiment_name, sample_name
-            )
-
-            if not self.check_sample_exists(experiment_name, sample_name):
-                raise SampleDoesNotExistError(object_name)
+        if not self.check_sample_exists(experiment_name, sample_name):
+            raise SampleDoesNotExistError(object_name)
 
         self._client.remove_object(self._sample_bucket_name, object_name)
 
@@ -184,20 +165,6 @@ class SampleManager:
             obj: minio.datatypes.Object
             experiment_name, sample_name = obj.object_name.split("/")
             sample_names.append(sample_name)
-        return sample_names
-
-    def list_all_samples(self, chunk_size: int = 1024 * 1024) -> list[str]:
-        sample_names = []
-        bucket_objects_iterator = self._client.list_objects(self._sample_bucket_name)
-
-        for obj in bucket_objects_iterator:
-            obj: minio.datatypes.Object
-            sample_name = obj.object_name.split("/")
-
-            if len(sample_name) == 1:
-                sample_name = sample_name[0]
-                sample_names.append(sample_name)
-
         return sample_names
 
     def remove_all_samples(self):
