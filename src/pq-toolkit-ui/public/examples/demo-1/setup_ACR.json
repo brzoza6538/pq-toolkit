@@ -6,7 +6,7 @@
 	"tests": [
 		  {
 		"testNumber": 1,
-		"type": "PEAQ",
+		"type": "ACR",
 		"samples": [
 		  {
 			"sampleId": "s1",

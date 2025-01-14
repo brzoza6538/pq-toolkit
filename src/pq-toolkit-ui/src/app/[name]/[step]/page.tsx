@@ -4,14 +4,14 @@ import ABTestComponent from '@/lib/components/experiments/ABTestComponent'
 import ABXTestComponent from '@/lib/components/experiments/ABXTestComponent'
 import APETestComponent from '@/lib/components/experiments/APETestComponent'
 import MUSHRATestComponent from '@/lib/components/experiments/MUSHRATestComponent'
-import PEAQTestComponent from '@/lib/components/experiments/PEAQTestComponent'
+import ACRTestComponent from '@/lib/components/experiments/ACRTestComponent'
 import {
   TestTypeEnum,
   type ABTest,
   type APETest,
   type FullABXTest,
   type FullMUSHRATest,
-  type FullPEAQTest
+  type FullACRTest
 } from '@/lib/schemas/experimentSetup'
 import Link from 'next/link'
 import { useContext, useState } from 'react'
@@ -23,7 +23,7 @@ import {
   type ABResult,
   type ABXResult,
   type MUSHRAResult,
-  type PEAQResult,
+  type ACRResult,
   type APEResult
 } from '@/lib/schemas/experimentState'
 import Header from '@/lib/components/basic/header'
@@ -107,14 +107,14 @@ const TestPage = ({
             feedback={feedback}
           />
         )
-	  case TestTypeEnum.enum.PEAQ:
+	  case TestTypeEnum.enum.ACR:
 		return (
-		  <PEAQTestComponent
-			testData={currentTest as FullPEAQTest}
+		  <ACRTestComponent
+			testData={currentTest as FullACRTest}
 			initialValues={
 			  results.results.find(
 				(r) => r.testNumber === currentTest.testNumber
-			  ) as PartialResult<PEAQResult>
+			  ) as PartialResult<ACRResult>
 			}
 			experimentName={name}
 			setAnswer={(result) => {

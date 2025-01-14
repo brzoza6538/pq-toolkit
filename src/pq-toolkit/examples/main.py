@@ -7,7 +7,7 @@ from pqtoolkit.dataclasses import (
     PqTestABX,
     PqTestAPE,
     PqTestMUSHRA,
-    PqTestPEAQ,
+    PqTestACR,
 )
 from tests.test_utils import generate_random_experiment_name
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
                     PqSample(sample_id="s6", asset_path="sample-15s.mp3"),
                 ],
             ),
-            PqTestPEAQ(
+            PqTestACR(
                 test_number=5,
                 samples=[
                     PqSample(sample_id="s1", asset_path="sample-12s.mp3"),

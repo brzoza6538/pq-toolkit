@@ -17,7 +17,7 @@ from app.schemas import (
     PqTestAPEResult,
     PqTestABXResult,
     PqTestMUSHRAResult,
-    PqTestPEAQResult
+    PqTestACRResult
 )
 
 
@@ -252,7 +252,7 @@ def test_remove_experiment_by_name(
 				"tests": [
 					{
 					"testNumber": 5,
-					"type": "PEAQ",
+					"type": "ACR",
 					"samples": [
 						{
 							"sampleId": "s1",
@@ -299,7 +299,7 @@ def test_remove_experiment_by_name(
 					}
 				]
 			},
-            PqTestPEAQResult,
+            PqTestACRResult,
 		),
     ],
 )

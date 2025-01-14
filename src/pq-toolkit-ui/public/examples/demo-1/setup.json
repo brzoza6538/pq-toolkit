@@ -96,6 +96,28 @@
 	  },
 	  {
 		"testNumber": 5,
+		"type": "ACR",
+		"samples": [
+		  {
+			"sampleId": "s1",
+			"assetPath": "sample-12s.mp3"
+		  },
+		  {
+			"sampleId": "s2",
+			"assetPath": "sample-15s.mp3"
+		  },
+		  {
+			"sampleId": "s3",
+			"assetPath": "file_sample_5.mp3"
+		  },
+		  {
+			"sampleId": "s4",
+			"assetPath": "file_sample_700.mp3"
+		  }
+		]
+	  },
+	  {
+		"testNumber": 6,
 		"type": "MUSHRA",
 		"reference": {
 		  "sampleId": "ref",
@@ -115,28 +137,6 @@
 		  {
 			"sampleId": "s2",
 			"assetPath": "sample-15s.mp3"
-		  }
-		]
-	  },
-	  {
-		"testNumber": 6,
-		"type": "PEAQ",
-		"samples": [
-		  {
-			"sampleId": "s1",
-			"assetPath": "sample-12s.mp3"
-		  },
-		  {
-			"sampleId": "s2",
-			"assetPath": "sample-15s.mp3"
-		  },
-		  {
-			"sampleId": "s3",
-			"assetPath": "file_sample_5.mp3"
-		  },
-		  {
-			"sampleId": "s4",
-			"assetPath": "file_sample_700s.mp3"
 		  }
 		]
 	  }

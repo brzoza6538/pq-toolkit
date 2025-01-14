@@ -14,7 +14,7 @@ class PqTestTypes(Enum):
     ABX: str = "ABX"
     APE: str = "APE"
     MUSHRA: str = "MUSHRA"
-    PEAQ: str = "PEAQ"
+    ACR: str = "ACR"
 
 
 class PqSample(BaseModel):
@@ -124,9 +124,9 @@ class PqTestMUSHRA(PqTestBase):
     type: PqTestTypes = PqTestTypes.MUSHRA
     
 
-class PqTestPEAQ(PqTestBase):
+class PqTestACR(PqTestBase):
     """
-    Base class for the PEAQ test.
+    Base class for the ACR test.
 
     Attributes:
         test_number: A number of the test.
@@ -137,7 +137,7 @@ class PqTestPEAQ(PqTestBase):
 
     question: str | None = None
     samples: list[PqSample]
-    type: PqTestTypes = PqTestTypes.PEAQ
+    type: PqTestTypes = PqTestTypes.ACR
 
 
 class PqTestAPE(PqTestBase):
@@ -192,13 +192,13 @@ class PqTestMUSHRAResult(PqTestBaseResult):
     samples_scores: list[PqTestMUSHRAScore] = Field(alias="samplesScores")
 
 
-class PqTestPEAQScore(BaseModel):
+class PqTestACRScore(BaseModel):
     sample_id: str = Field(alias="sampleId")
     score: int
 
 
-class PqTestPEAQResult(PqTestBaseResult):
-    samples_scores: list[PqTestPEAQScore] = Field(alias="samplesScores")
+class PqTestACRResult(PqTestBaseResult):
+    samples_scores: list[PqTestACRScore] = Field(alias="samplesScores")
 
 
 class PqTestAPESampleRating(BaseModel):
@@ -217,7 +217,7 @@ class PqTestAPEResult(PqTestBaseResult):
 
 class PqTestResultsList(BaseModel):
     results: list[
-        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestPEAQResult | PqTestAPEResult
+        PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestACRResult | PqTestAPEResult
     ]
 
 
@@ -235,13 +235,13 @@ class PqExperiment(BaseModel):
     uid: UUID4 | str = uuid.uuid4()
     name: str
     description: str
-    tests: list[PqTestMUSHRA | PqTestPEAQ | PqTestAPE | PqTestABX | PqTestAB]
+    tests: list[PqTestMUSHRA | PqTestACR | PqTestAPE | PqTestABX | PqTestAB]
 
     @field_validator("tests", mode="before")  # noqa
     @classmethod
     def validate_tests(
         cls, v: list
-    ) -> list[PqTestMUSHRA | PqTestPEAQ | PqTestAPE | PqTestABX | PqTestAB]:
+    ) -> list[PqTestMUSHRA | PqTestACR | PqTestAPE | PqTestABX | PqTestAB]:
         tests_list = []
         for test in v:
             object_type = type(test)
@@ -257,6 +257,6 @@ class PqExperiment(BaseModel):
                         tests_list.append(PqTestAPE(**test))
                     case PqTestTypes.MUSHRA:
                         tests_list.append(PqTestMUSHRA(**test))
-                    case PqTestTypes.PEAQ:
-                        tests_list.append(PqTestPEAQ(**test))
+                    case PqTestTypes.ACR:
+                        tests_list.append(PqTestACR(**test))
         return tests_list

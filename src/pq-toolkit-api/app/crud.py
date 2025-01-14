@@ -11,7 +11,7 @@ from app.schemas import (
     PqTestABResult,
     PqTestABXResult,
     PqTestMUSHRAResult,
-    PqTestPEAQResult,
+    PqTestACRResult,
     PqTestAPEResult,
     PqExperiment,
     PqExperimentsList,
@@ -216,15 +216,15 @@ def add_test_results(
 
 def transform_test_result(
     result: ExperimentTestResult, test_type: PqTestTypes
-) -> PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestPEAQResult | PqTestAPEResult:
+) -> PqTestABResult | PqTestABXResult | PqTestMUSHRAResult | PqTestACRResult | PqTestAPEResult:
     if test_type == PqTestTypes.AB:
         return PqTestABResult(**result.test_result)
     elif test_type == PqTestTypes.ABX:
         return PqTestABXResult(**result.test_result)
     elif test_type == PqTestTypes.MUSHRA:
         return PqTestMUSHRAResult(**result.test_result)
-    elif test_type == PqTestTypes.PEAQ:
-        return PqTestPEAQResult(**result.test_result)
+    elif test_type == PqTestTypes.ACR:
+        return PqTestACRResult(**result.test_result)
     elif test_type == PqTestTypes.APE:
         return PqTestAPEResult(**result.test_result)
 
@@ -237,8 +237,8 @@ def verify_test_result(result: dict, test_type: PqTestTypes):
             PqTestABXResult.model_validate(result)
         elif test_type == PqTestTypes.MUSHRA:
             PqTestMUSHRAResult.model_validate(result)
-        elif test_type == PqTestTypes.PEAQ:
-            PqTestPEAQResult.model_validate(result)
+        elif test_type == PqTestTypes.ACR:
+            PqTestACRResult.model_validate(result)
         elif test_type == PqTestTypes.APE:
             PqTestAPEResult.model_validate(result)
     except ValidationError as e:

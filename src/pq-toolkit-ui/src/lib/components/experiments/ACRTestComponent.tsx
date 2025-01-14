@@ -1,26 +1,26 @@
 'use client'
 
-import { type FullPEAQTest } from '@/lib/schemas/experimentSetup'
+import { type FullACRTest } from '@/lib/schemas/experimentSetup'
 import {
-  type PEAQResult,
+  type ACRResult,
   type PartialResult
 } from '@/lib/schemas/experimentState'
-import PEAQPlayer from '../player/PEAQPlayer'
+import ACRPlayer from '../player/ACRPlayer'
 import { getSampleUrl } from './common/utils'
 import React, { useEffect, useState } from 'react'
-import PEAQSlider from '@/lib/components/experiments/common/PEAQSlider'
+import ACRSlider from '@/lib/components/experiments/common/ACRSlider'
 
-const PEAQTestComponent = ({
+const ACRTestComponent = ({
   testData,
   initialValues,
   experimentName,
   setAnswer,
   feedback
 }: {
-  testData: FullPEAQTest
-  initialValues?: PartialResult<PEAQResult>
+  testData: FullACRTest
+  initialValues?: PartialResult<ACRResult>
   experimentName: string
-  setAnswer: (result: PartialResult<PEAQResult>) => void
+  setAnswer: (result: PartialResult<ACRResult>) => void
   feedback: string
 }): JSX.Element => {
   const { samples, question } = testData
@@ -62,7 +62,7 @@ const PEAQTestComponent = ({
   const selectedPlayerState = useState<number>(0)
 
   useEffect(() => {
-    const result: PEAQResult = {
+    const result: ACRResult = {
       testNumber: testData.testNumber,
       samplesScores: testData.samples.map(({ sampleId }) => ({
         sampleId,
@@ -88,7 +88,7 @@ const PEAQTestComponent = ({
     })
   }
 
-  const getPEAQscale = (): JSX.Element => {
+  const getACRscale = (): JSX.Element => {
     const scale = ['', ' ', 'Very annoying', 'Annoying', 'Slightly annoying', 'Perceptible, but not annoying', 'Imperceptible']
 
     return (
@@ -108,13 +108,13 @@ const PEAQTestComponent = ({
   return (
     <div className="flex flex-col items-center bg-gray-100 dark:bg-gray-700 rounded-xl p-8 shadow-2xl">
       <h2 className="relative text-center text-3xl md:text-2xl font-semibold -mb-2">
-        PEAQ Test
+        ACR Test
       </h2>
       <div className="flex flex-col gap-md">
         <div className="flex flex-col gap-xs">
           <div className="text-center">{question}</div>
         </div>
-        <PEAQPlayer
+        <ACRPlayer
           assets={[...shuffledSamples].reduce<
             Map<string, { url: string; footers: JSX.Element[] }>
           >((map, sample, idx) => {
@@ -122,7 +122,7 @@ const PEAQTestComponent = ({
             map.set(sampleName, {
               url: getSampleUrl(experimentName, sample.assetPath),
               footers: [
-                <PEAQSlider
+                <ACRSlider
                   key={`slider_${idx}`}
                   rating={ratings.get(sample.sampleId) ?? 3}
                   setRating={(value) => {
@@ -140,11 +140,11 @@ const PEAQTestComponent = ({
             return map
           }, new Map<string, { url: string; footers: JSX.Element[] }>())}
           selectedPlayerState={selectedPlayerState}
-          scale={getPEAQscale()}
+          scale={getACRscale()}
         />
       </div>
     </div>
   )
 }
 
-export default PEAQTestComponent
+export default ACRTestComponent

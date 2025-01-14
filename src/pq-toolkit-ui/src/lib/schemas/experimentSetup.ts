@@ -44,7 +44,7 @@ export type Question = z.infer<typeof QuestionSchema>
 /**
  * Enum of all available test types
  */
-export const TestTypeEnum = z.enum(['AB', 'ABX', 'MUSHRA', 'PEAQ', 'APE'])
+export const TestTypeEnum = z.enum(['AB', 'ABX', 'MUSHRA', 'ACR', 'APE'])
 
 /**
  * Type from {@link TestTypeEnum}
@@ -169,38 +169,38 @@ export type MUSHRATest = z.infer<typeof MUSHRATestSchema>
 export type FullMUSHRATest = z.infer<typeof FullMUSHRATestSchema>
 
 /**
- * PEAQ test schema
- * PEAQ test consist of one or more samples
+ * ACR test schema
+ * ACR test consist of one or more samples
  * User must rate each sample on a scale from 0 to 5
  */
-export const PEAQTestSchema = BaseTestSchema.extend({
-	type: z.enum(['PEAQ']),
+export const ACRTestSchema = BaseTestSchema.extend({
+	type: z.enum(['ACR']),
 	question: z.string().optional().nullable(),
 	samples: z.array(SampleSchema).min(1)
   })
 
 /**
- * PEAQ test schema with all required fields filled
+ * ACR test schema with all required fields filled
  */
-export const FullPEAQTestSchema = PEAQTestSchema.extend({
+export const FullACRTestSchema = ACRTestSchema.extend({
 	samplesShuffle: z.array(z.string())
   })
   
   /**
-   * Type from {@link PEAQTestSchema}
-   * PEAQ test schema
+   * Type from {@link ACRTestSchema}
+   * ACR test schema
    * @field question - question displayed to user
    * @field samples - array of samples {@link SampleSchema}
    */
-  export type PEAQTest = z.infer<typeof PEAQTestSchema>
+  export type ACRTest = z.infer<typeof ACRTestSchema>
   /**
-   * Type from {@link FullPEAQTestSchema}
-   * PEAQ test schema with all required fields filled
+   * Type from {@link FullACRTestSchema}
+   * ACR test schema with all required fields filled
    * @field question - question displayed to user
    * @field samples - array of samples {@link SampleSchema}
    * @field samplesShuffle - array of sample ids in shuffled order
    */
-  export type FullPEAQTest = z.infer<typeof FullPEAQTestSchema>
+  export type FullACRTest = z.infer<typeof FullACRTestSchema>
 
 /**
  * APE test schema

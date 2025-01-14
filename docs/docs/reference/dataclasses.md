@@ -20,7 +20,7 @@ This classes are useful when working with tests (e.g. setting them up).
 ::: pqtoolkit.dataclasses.PqTestMUSHRA
 
 
-::: pqtoolkit.dataclasses.PqTestPEAQ
+::: pqtoolkit.dataclasses.PqTestACR
 
 
 ::: pqtoolkit.dataclasses.PqTestTypes

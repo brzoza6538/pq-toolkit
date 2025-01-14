@@ -17,7 +17,7 @@ import {
   type ABXTest,
   type FullABXTest,
   type MUSHRATest,
-  type PEAQTest,
+  type ACRTest,
   type APETest,
   type BaseTest
 } from '@/lib/schemas/experimentSetup'
@@ -37,7 +37,7 @@ import {
 import AbEditor from '../editors/AbEditor'
 import AbxEditor from '../editors/AbxEditor'
 import MushraEditor from '../editors/MushraEditor'
-import PeaqEditor from '../editors/PeaqEditor'
+import AcrEditor from '../editors/AcrEditor'
 import ApeEditor from '../editors/ApeEditor'
 
 function generateRandomString(): string {
@@ -114,7 +114,7 @@ const CreateExperimentForm = ({
     tests: []
   })
   const [currentTest, setCurrentTest] = useState<
-    ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
+    ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
   >({
     testNumber: -1,
     type: 'AB',
@@ -227,7 +227,7 @@ const CreateExperimentForm = ({
   }
 
   const areAllFilesProvided = (
-    test: ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest,
+    test: ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest,
     fileList: File[]
   ): boolean => {
     if (Object.prototype.hasOwnProperty.call(test, 'reference')) {
@@ -754,33 +754,33 @@ const CreateExperimentForm = ({
                 <label className="flex items-center relative cursor-pointer mr-2">
                   <input
                     type="radio"
-                    value="PEAQ"
+                    value="ACR"
                     name="type"
-                    checked={currentTest.type === 'PEAQ'}
+                    checked={currentTest.type === 'ACR'}
                     onClick={(e) => {
                       setCurrentTest({
                         ...currentTest,
-                        type: (e.target as HTMLTextAreaElement).value as 'PEAQ'
+                        type: (e.target as HTMLTextAreaElement).value as 'ACR'
                       })
                     }}
                     className="hidden"
                   />
                   <span
                     className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                      currentTest.type === 'PEAQ'
+                      currentTest.type === 'ACR'
                         ? 'bg-pink-500 border-pink-500 dark:bg-pink-600 dark:border-pink-600'
                         : 'bg-gray-200 border-gray-400'
                     } transition-transform transform hover:scale-110 duration-100 ease-in-out`}
                   >
                     <span
                       className={`w-2 h-2 rounded-full ${
-                        currentTest.type === 'PEAQ'
+                        currentTest.type === 'ACR'
                           ? 'bg-white dark:bg-gray-100'
                           : ''
                       }`}
                     ></span>
                   </span>
-                  <span className="ml-2">PEAQ</span>
+                  <span className="ml-2">ACR</span>
                 </label>
                 <label className="flex items-center relative cursor-pointer mr-2">
                   <input
@@ -894,11 +894,11 @@ const CreateExperimentForm = ({
                       setSetup={setSetup}
                     />
                   )
-				case 'PEAQ':
+				case 'ACR':
 				  return (
-				    <PeaqEditor
+				    <AcrEditor
 					  experimentName={setup.name}
-					  currentTest={currentTest as PEAQTest}
+					  currentTest={currentTest as ACRTest}
 					  setCurrentTest={setCurrentTest}
 					  fileList={fileList}
 					  setSetup={setSetup}

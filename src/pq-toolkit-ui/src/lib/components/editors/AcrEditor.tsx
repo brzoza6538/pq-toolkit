@@ -7,23 +7,23 @@ import {
   type ExperimentSetup,
   type FullABXTest,
   type MUSHRATest,
-  type PEAQTest
+  type ACRTest
 } from '@/lib/schemas/experimentSetup'
 import { useState } from 'react'
 import { getSampleUrl } from '../experiments/common/utils'
 import Playback from '../player/Playback'
 
-const PeaqEditor = ({
+const AcrEditor = ({
   experimentName,
   currentTest,
   setCurrentTest,
   fileList,
   setSetup
 }: {
-  currentTest: PEAQTest
+  currentTest: ACRTest
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
     >
   >
   fileList: File[]
@@ -162,4 +162,4 @@ const PeaqEditor = ({
     </div>
   )
 }
-export default PeaqEditor
+export default AcrEditor

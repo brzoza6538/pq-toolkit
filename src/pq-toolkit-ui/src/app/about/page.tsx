@@ -74,22 +74,23 @@ const About = (): JSX.Element => {
                 href="/about/ape"
               >
                 {' '}
-                APE{' '}
-              </a>{' '}
-              and
+                APE
+              </a>
+              ,
               <a
                 className="text-blue-400 dark:text-blue-500 no-underline hover:text-pink-500 dark:hover:text-pink-600 hover:text-underline transform hover:scale-105 duration-300 ease-in-out"
                 href="/about/mushra"
               >
                 {' '}
-                MUSHRA
-              </a>
+                MUSHRA{' '}
+              </a>{' '}
+              and
               <a
                 className="text-blue-400 dark:text-blue-500 no-underline hover:text-pink-500 dark:hover:text-pink-600 hover:text-underline transform hover:scale-105 duration-300 ease-in-out"
-                href="/about/mushra"
+                href="/about/acr"
               >
 			    {' '}
-			    PEAQ
+			    ACR
 			  </a>
               , catering to different research needs and scenarios.
             </li>

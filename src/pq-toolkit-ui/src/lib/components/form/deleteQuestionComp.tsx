@@ -5,7 +5,7 @@ import {
   type ABXTest,
   type FullABXTest,
   type MUSHRATest,
-  type PEAQTest,
+  type ACRTest,
   type APETest,
   type BaseTest,
   type Question
@@ -15,10 +15,10 @@ interface DeleteQuestionCompProps {
   index: number
   setCurrentTest: React.Dispatch<
     React.SetStateAction<
-      ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
+      ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
     >
   >
-  currentTest: ABTest | ABXTest | FullABXTest | MUSHRATest | PEAQTest | APETest | BaseTest
+  currentTest: ABTest | ABXTest | FullABXTest | MUSHRATest | ACRTest | APETest | BaseTest
 }
 
 const DeleteQuestionComp = (props: DeleteQuestionCompProps): JSX.Element => {

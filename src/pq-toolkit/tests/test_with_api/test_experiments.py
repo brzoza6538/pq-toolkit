@@ -5,7 +5,7 @@ from pqtoolkit.dataclasses import (
     PqExperiment,
     PqTestAB,
     PqTestMUSHRA,
-    PqTestPEAQ,
+    PqTestACR,
     PqSample,
     PqQuestion,
 )
@@ -82,7 +82,7 @@ class TestExperimentsWithAPI(unittest.TestCase):
                         PqSample(sample_id="s6", asset_path="sample-15s.mp3"),
                     ],
                 ),
-                PqTestPEAQ(
+                PqTestACR(
                     test_number=3,
                     samples=[
                         PqSample(sample_id="s1", asset_path="sample-12s.mp3"),
