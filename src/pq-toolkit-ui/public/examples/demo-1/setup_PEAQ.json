@@ -1,37 +1,30 @@
 {
-  "uid": "1234-5678-1234-1234",
-  "name": "PEAQ test",
-  "description": "PEAQ configuration",
-  "tests": [
-    {
-      "testNumber": 1,
-      "type": "PEAQ",
-      "samples": [
-        {
-          "sampleId": "s1",
-          "assetPath": "sample-12s.mp3"
-        },
-        {
-          "sampleId": "s2",
-          "assetPath": "sample-15s.mp3"
-        },
-        {
-          "sampleId": "s3",
-          "assetPath": "sample-15s.mp3"
-        },
-        {
-          "sampleId": "s4",
-          "assetPath": "sample-15s.mp3"
-        },
-        {
-          "sampleId": "s5",
-          "assetPath": "sample-12s.mp3"
-        },
-        {
-          "sampleId": "s6",
-          "assetPath": "sample-12s.mp3"
-        }
-      ]
-    }
-  ]
-}
+	"uid": "1234-5678-1234-1234",
+	"name": "Test 1",
+	"description": "Example experiment configuration 1",
+	"endText": "This is custom end text",
+	"tests": [
+		  {
+		"testNumber": 1,
+		"type": "PEAQ",
+		"samples": [
+		  {
+			"sampleId": "s1",
+			"assetPath": "sample-12s.mp3"
+		  },
+		  {
+			"sampleId": "s2",
+			"assetPath": "sample-15s.mp3"
+		  },
+		  {
+			"sampleId": "s4",
+			"assetPath": "file_sample_700.mp3"
+		  },
+		  {
+			"sampleId": "s3",
+			"assetPath": "file_sample_5.mp3"
+		  }
+		]
+	  }
+	]
+  }
