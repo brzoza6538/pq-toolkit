@@ -131,15 +131,11 @@ class PqTestPEAQ(PqTestBase):
     Attributes:
         test_number: A number of the test.
         type: A type of the test.
-        reference: A reference sample
         question: A question for the test
-        anchors: list of anchor samples associated with the test
         samples: list of samples associated with the test
     """
 
-    reference: PqSample
     question: str | None = None
-    anchors: list[PqSample]
     samples: list[PqSample]
     type: PqTestTypes = PqTestTypes.PEAQ
 
@@ -202,8 +198,6 @@ class PqTestPEAQScore(BaseModel):
 
 
 class PqTestPEAQResult(PqTestBaseResult):
-    reference_score: int = Field(alias="referenceScore")
-    anchors_scores: list[PqTestPEAQScore] = Field(alias="anchorsScores")
     samples_scores: list[PqTestPEAQScore] = Field(alias="samplesScores")
 
 

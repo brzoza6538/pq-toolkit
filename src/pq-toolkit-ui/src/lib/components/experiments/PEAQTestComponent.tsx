@@ -5,10 +5,10 @@ import {
   type PEAQResult,
   type PartialResult
 } from '@/lib/schemas/experimentState'
-import MultiPlayer from '../player/MultiPlayer'
+import PEAQPlayer from '../player/PEAQPlayer'
 import { getSampleUrl } from './common/utils'
 import React, { useEffect, useState } from 'react'
-import VerticalSlider from '@/lib/components/experiments/common/VerticalSlider'
+import PEAQSlider from '@/lib/components/experiments/common/PEAQSlider'
 
 const PEAQTestComponent = ({
   testData,
@@ -23,36 +23,16 @@ const PEAQTestComponent = ({
   setAnswer: (result: PartialResult<PEAQResult>) => void
   feedback: string
 }): JSX.Element => {
-  const { reference, anchors, samples, question } = testData
-
-  const prepareSamples = (): Array<{ sampleId: string; assetPath: string }> => {
-    const samplesCombined = [...samples, ...anchors, reference]
-    samplesCombined.sort((a, b) =>
-      testData.samplesShuffle.findIndex((v) => v === a.sampleId) >
-      testData.samplesShuffle.findIndex((v) => v === b.sampleId)
-        ? 1
-        : -1
-    )
-    return samplesCombined
-  }
+  const { samples, question } = testData
 
   const [shuffledSamples] = useState<
     Array<{ sampleId: string; assetPath: string }>
-  >(prepareSamples())
+  >(samples)
 
   const [ratings, setRatings] = useState<Map<string, number>>(() => {
     const savedRatings: Array<{ sampleId: string; score: number }> = []
     if (initialValues?.samplesScores != null) {
       savedRatings.push(...initialValues.samplesScores)
-    }
-    if (initialValues?.anchorsScores != null) {
-      savedRatings.push(...initialValues.anchorsScores)
-    }
-    if (initialValues?.referenceScore != null) {
-      savedRatings.push({
-        sampleId: reference.sampleId,
-        score: initialValues.referenceScore
-      })
     }
 
     return shuffledSamples.reduce<Map<string, number>>((map, sample) => {
@@ -61,7 +41,7 @@ const PEAQTestComponent = ({
       if (idx !== -1) {
         map.set(sample.sampleId, savedRatings[idx].score)
       } else {
-        map.set(sample.sampleId, 50)
+        map.set(sample.sampleId, 3)
       }
 
       return map
@@ -73,11 +53,6 @@ const PEAQTestComponent = ({
   useEffect(() => {
     const result: PEAQResult = {
       testNumber: testData.testNumber,
-      anchorsScores: testData.anchors.map(({ sampleId }) => ({
-        sampleId,
-        score: ratings.get(sampleId) ?? -1
-      })),
-      referenceScore: ratings.get(reference.sampleId) ?? -1,
       samplesScores: testData.samples.map(({ sampleId }) => ({
         sampleId,
         score: ratings.get(sampleId) ?? -1
@@ -90,9 +65,7 @@ const PEAQTestComponent = ({
     setAnswer,
     ratings,
     testData.testNumber,
-    testData.anchors,
     testData.samples,
-    reference.sampleId,
     feedback
   ])
 
@@ -105,7 +78,7 @@ const PEAQTestComponent = ({
   }
 
   const getPEAQscale = (): JSX.Element => {
-    const scale = ['Terrible', 'Bad', 'Poor', 'Fair', 'Good', 'Excellent']
+    const scale = [' ', ' ', 'Very annoying', 'Annoying', 'Slightly annoying', 'Perceptible, but not annoying', 'Imperceptible']
 
     return (
       <div className="h-full flex flex-col justify-between">
@@ -130,20 +103,18 @@ const PEAQTestComponent = ({
         <div className="flex flex-col gap-xs">
           <div className="text-center">{question}</div>
         </div>
-        <MultiPlayer
-          assets={[reference, ...shuffledSamples].reduce<
+        <PEAQPlayer
+          assets={[...shuffledSamples].reduce<
             Map<string, { url: string; footers: JSX.Element[] }>
           >((map, sample, idx) => {
-            const sampleName = idx === 0 ? 'Reference' : `Sample ${idx}`
+            const sampleName = `Sample ${idx}`
             map.set(sampleName, {
               url: getSampleUrl(experimentName, sample.assetPath),
               footers:
-                idx === 0
-                  ? [getPEAQscale()]
-                  : [
-                      <VerticalSlider
+					[
+                      <PEAQSlider
                         key={`slider_${idx}`}
-                        rating={ratings.get(sample.sampleId) ?? 0}
+                        rating={ratings.get(sample.sampleId) ?? 3}
                         setRating={(value) => {
                           sliderSetRating(value, sample.sampleId)
                         }}
@@ -152,13 +123,14 @@ const PEAQTestComponent = ({
                         className="text-center text-xl font-bold text-pink-500 dark:text-pink-600"
                         key={`rating_${idx}`}
                       >
-                        {ratings.get(sample.sampleId) ?? 0}
+                        {ratings.get(sample.sampleId) ?? 3}
                       </div>
                     ]
             })
             return map
           }, new Map<string, { url: string; footers: JSX.Element[] }>())}
           selectedPlayerState={selectedPlayerState}
+		  scale={getPEAQscale()}
         />
       </div>
     </div>

@@ -170,17 +170,13 @@ export type FullMUSHRATest = z.infer<typeof FullMUSHRATestSchema>
 
 /**
  * PEAQ test schema
- * PEAQ test consist of reference sample, one or more
- * anchor samples and multiple samples which are compared
- * to reference.
- * User must rate each sample on a scale from 0 to 100
+ * PEAQ test consist of one or more samples
+ * User must rate each sample on a scale from 0 to 5
  */
 export const PEAQTestSchema = BaseTestSchema.extend({
 	type: z.enum(['PEAQ']),
 	question: z.string().optional().nullable(),
-	reference: SampleSchema,
-	anchors: z.array(SampleSchema).min(1),
-	samples: z.array(SampleSchema).min(2)
+	samples: z.array(SampleSchema).min(1)
   })
 
 /**
@@ -194,8 +190,6 @@ export const FullPEAQTestSchema = PEAQTestSchema.extend({
    * Type from {@link PEAQTestSchema}
    * PEAQ test schema
    * @field question - question displayed to user
-   * @field reference - reference sample {@link SampleSchema}
-   * @field anchors - array of anchor samples {@link SampleSchema}
    * @field samples - array of samples {@link SampleSchema}
    */
   export type PEAQTest = z.infer<typeof PEAQTestSchema>
@@ -203,8 +197,6 @@ export const FullPEAQTestSchema = PEAQTestSchema.extend({
    * Type from {@link FullPEAQTestSchema}
    * PEAQ test schema with all required fields filled
    * @field question - question displayed to user
-   * @field reference - reference sample {@link SampleSchema}
-   * @field anchors - array of anchor samples {@link SampleSchema}
    * @field samples - array of samples {@link SampleSchema}
    * @field samplesShuffle - array of sample ids in shuffled order
    */

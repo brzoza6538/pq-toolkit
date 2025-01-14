@@ -79,11 +79,6 @@ if __name__ == "__main__":
             ),
             PqTestPEAQ(
                 test_number=5,
-                reference=PqSample(sample_id="ref", asset_path="file_sample_5.mp3"),
-                anchors=[
-                    PqSample(sample_id="a1", asset_path="file_sample_700.mp3"),
-                    PqSample(sample_id="a2", asset_path="file_sample_5.mp3"),
-                ],
                 samples=[
                     PqSample(sample_id="s1", asset_path="sample-12s.mp3"),
                     PqSample(sample_id="s2", asset_path="sample-15s.mp3"),

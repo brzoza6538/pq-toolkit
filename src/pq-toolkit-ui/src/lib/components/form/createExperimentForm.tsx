@@ -760,10 +760,7 @@ const CreateExperimentForm = ({
                     onClick={(e) => {
                       setCurrentTest({
                         ...currentTest,
-                        type: (e.target as HTMLTextAreaElement)
-                          .value as 'PEAQ',
-                        anchors: [],
-                        reference: { sampleId: '', assetPath: '' }
+                        type: (e.target as HTMLTextAreaElement).value as 'PEAQ'
                       })
                     }}
                     className="hidden"

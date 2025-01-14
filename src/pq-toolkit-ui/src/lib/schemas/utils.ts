@@ -76,8 +76,6 @@ export const listExperimentSamples = (
     } else if (test.type === TestTypeEnum.enum.PEAQ) {
       const castTest = test as PEAQTest
       castTest.samples.forEach((sample) => uniqueSamples.add(sample.assetPath))
-      castTest.anchors.forEach((sample) => uniqueSamples.add(sample.assetPath))
-      uniqueSamples.add(castTest.reference.assetPath)
     }
   })
 

@@ -105,17 +105,10 @@ export type MUSHRAResult = z.infer<typeof MUSHRAResultSchema>
  * Scores of all samples on scale from 0 to 100
  */
 export const PEAQResultSchema = BaseResultSchema.extend({
-	referenceScore: z.number().min(0).max(100),
-	anchorsScores: z.array(
-	  z.object({
-		sampleId: z.string().min(1),
-		score: z.number().min(0).max(100)
-	  })
-	),
 	samplesScores: z.array(
 	  z.object({
 		sampleId: z.string().min(1),
-		score: z.number().min(0).max(100)
+		score: z.number().min(0).max(5)
 	  })
 	)
   })

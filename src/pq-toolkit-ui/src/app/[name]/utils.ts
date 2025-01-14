@@ -44,8 +44,8 @@ export const fillMUSHRATest = (test: MUSHRATest): FullMUSHRATest => {
 }
 
 export const fillPEAQTest = (test: PEAQTest): FullPEAQTest => {
-	const { samples, reference, anchors } = test
-	const samplesCombined = [...samples, ...anchors, reference]
+	const { samples } = test
+	const samplesCombined = [...samples]
 	const samplesShuffle = shuffleArray(samplesCombined)
   
 	return {
