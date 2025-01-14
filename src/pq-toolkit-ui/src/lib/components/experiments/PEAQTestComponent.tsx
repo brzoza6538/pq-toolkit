@@ -25,9 +25,20 @@ const PEAQTestComponent = ({
 }): JSX.Element => {
   const { samples, question } = testData
 
+  const prepareSamples = (): Array<{ sampleId: string; assetPath: string }> => {
+    const samplesCombined = [...samples]
+    samplesCombined.sort((a, b) =>
+      testData.samplesShuffle.findIndex((v) => v === a.sampleId) >
+      testData.samplesShuffle.findIndex((v) => v === b.sampleId)
+        ? 1
+        : -1
+    )
+    return samplesCombined
+  }
+
   const [shuffledSamples] = useState<
     Array<{ sampleId: string; assetPath: string }>
-  >(samples)
+  >(prepareSamples())
 
   const [ratings, setRatings] = useState<Map<string, number>>(() => {
     const savedRatings: Array<{ sampleId: string; score: number }> = []
@@ -78,7 +89,7 @@ const PEAQTestComponent = ({
   }
 
   const getPEAQscale = (): JSX.Element => {
-    const scale = [' ', ' ', 'Very annoying', 'Annoying', 'Slightly annoying', 'Perceptible, but not annoying', 'Imperceptible']
+    const scale = ['', ' ', 'Very annoying', 'Annoying', 'Slightly annoying', 'Perceptible, but not annoying', 'Imperceptible']
 
     return (
       <div className="h-full flex flex-col justify-between">
@@ -110,27 +121,26 @@ const PEAQTestComponent = ({
             const sampleName = `Sample ${idx}`
             map.set(sampleName, {
               url: getSampleUrl(experimentName, sample.assetPath),
-              footers:
-					[
-                      <PEAQSlider
-                        key={`slider_${idx}`}
-                        rating={ratings.get(sample.sampleId) ?? 3}
-                        setRating={(value) => {
-                          sliderSetRating(value, sample.sampleId)
-                        }}
-                      />,
-                      <div
-                        className="text-center text-xl font-bold text-pink-500 dark:text-pink-600"
-                        key={`rating_${idx}`}
-                      >
-                        {ratings.get(sample.sampleId) ?? 3}
-                      </div>
-                    ]
+              footers: [
+                <PEAQSlider
+                  key={`slider_${idx}`}
+                  rating={ratings.get(sample.sampleId) ?? 3}
+                  setRating={(value) => {
+                    sliderSetRating(value, sample.sampleId)
+                  }}
+                />,
+                <div
+                  className="text-center text-xl font-bold text-pink-500 dark:text-pink-600"
+                  key={`rating_${idx}`}
+                >
+                  {ratings.get(sample.sampleId) ?? 3}
+                </div>
+              ]
             })
             return map
           }, new Map<string, { url: string; footers: JSX.Element[] }>())}
           selectedPlayerState={selectedPlayerState}
-		  scale={getPEAQscale()}
+          scale={getPEAQscale()}
         />
       </div>
     </div>
