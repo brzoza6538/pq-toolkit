@@ -17,6 +17,7 @@ from app.schemas import (
     PqTestAPEResult,
     PqTestABXResult,
     PqTestMUSHRAResult,
+    PqTestPEAQResult
 )
 
 
@@ -243,6 +244,63 @@ def test_remove_experiment_by_name(
             },
             PqTestMUSHRAResult,
         ),
+        (
+            {
+                "name": "Full Experiment Name",
+                "description": "Experiment Description",
+                "end_text": "Experiment End Text",
+				"tests": [
+					{
+					"testNumber": 5,
+					"type": "PEAQ",
+					"samples": [
+						{
+							"sampleId": "s1",
+							"assetPath": "sample-12s.mp3"
+						},
+						{
+							"sampleId": "s2",
+							"assetPath": "sample-15s.mp3"
+						},
+						{
+							"sampleId": "s4",
+							"assetPath": "file_sample_700.mp3"
+						},
+						{
+							"sampleId": "s3",
+							"assetPath": "file_sample_5.mp3"
+						}
+					]
+				}
+				]
+			},
+            {
+				"results": [
+					{
+					"testNumber": 5,
+					"samplesScores": [
+						{
+						"sampleId": "s1",
+						"score": 2
+						},
+						{
+						"sampleId": "s2",
+						"score": 3
+						},
+						{
+						"sampleId": "s4",
+						"score": 5
+						},
+						{
+						"sampleId": "s3",
+						"score": 4
+						}
+					]
+					}
+				]
+			},
+            PqTestPEAQResult,
+		),
     ],
 )
 def test_add_experiment_results(
