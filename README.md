@@ -102,11 +102,11 @@ Known issues:
 
 ## ZPRP-24Z notes
 Added:
- - Playback in experiment configurator (test branch)
- - Absolute Category Test (test branch)
- - CI/ CD and update of some dependencies (main branch)
- - Backend getting results optimalisation for WIMU-24Z team (main branch)
- - Endpoints for adding and getting samples and their average ratings for WIMU-24Z team (main branch)
+ - Playback in experiment configurator
+ - Absolute Category Test
+ - CI/ CD and update of some dependencies
+ - Backend getting results optimalisation for WIMU-24Z team
+ - Endpoints for adding and getting samples and their average ratings for WIMU-24Z team
 
 Known isses:
  - Error handling (still)
