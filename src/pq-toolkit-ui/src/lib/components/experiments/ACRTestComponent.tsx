@@ -89,7 +89,7 @@ const ACRTestComponent = ({
   }
 
   const getACRscale = (): JSX.Element => {
-    const scale = ['', ' ', 'Very annoying', 'Annoying', 'Slightly annoying', 'Perceptible, but not annoying', 'Imperceptible']
+    const scale = ['', ' ', 'Bad', 'Poor', 'Fair', 'Good', 'Excellent']
 
     return (
       <div className="h-full flex flex-col justify-between">

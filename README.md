@@ -19,6 +19,10 @@ Project members:
    - Mikołaj Olczak
    - Kondracki Wojciech
    - Krzysztof Miśków
+ - ZPRP 24Z course members:
+   - Michał Brzeziński
+   - Michał Sadlej
+   - Aleksandra Szymańska
 
 ## Project structure
 
@@ -34,7 +38,7 @@ Project members:
 This project consists of test creation Python plugin and web application
 testing platform.
 
-### How to use Python plugin
+### How to use Python plugin (DEPRECATED)
 
 Installation details are available in [pq-toolkit README](src/pq-toolkit/README.md), as well as in the [docs](docs/README.md).
 
@@ -95,3 +99,22 @@ Known issues:
 
 Known issues:
 - Feedback is not included in test results
+
+## ZPRP-24Z notes
+Added:
+ - Playback in experiment configurator (test branch)
+ - Absolute Category Test (test branch)
+ - CI/ CD and update of some dependencies (main branch)
+ - Backend getting results optimalisation for WIMU-24Z team (main branch)
+ - Endpoints for adding and getting samples and their average ratings for WIMU-24Z team (main branch)
+
+Known isses:
+ - Error handling (still)
+ - Feedback is not included in test results (still)
+ - Python plugin doesn't seem to work
+ - Need to save each question
+ - No feedback on frontend whether adding test/ questions was successful - results in incorrect json configuration file
+
+Possible improvements:
+ - since there is a MUSHRA test, one could add a way to modify audio quality in the web application
+ - configuring scale names in experiment configurator instead of adding new very simmilar test (for example Degradation Category Rating)
