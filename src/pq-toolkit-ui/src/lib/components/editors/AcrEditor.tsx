@@ -57,7 +57,7 @@ const AcrEditor = ({
                     if (e.target.checked) {
                       setSampleTest((oldarray) => [
                         ...oldarray,
-                        { sampleId: 's0', assetPath: file.name }
+                        { sampleId: `s${file.name}`, assetPath: file.name }
                       ])
                     } else {
                       setSampleTest((oldarray) =>
