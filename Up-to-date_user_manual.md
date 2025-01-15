@@ -1,10 +1,12 @@
 # Perceptual Qualities Python Toolkit
 
-## Up-to-Date Installation and User Manual
+## Installation and User Manual
 - Requirements [Requirements](#requirements)
 - Installation Steps [Installation Steps](#installation-steps)
 - How to Start the Web Application [How to Start the Web Application](#how-to-start-the-web-application)
 - How to create revisions [How to create revisions](#how-to-create-revisions)
+- About page [About page](#about-page)
+- How to create experiments [How to create experiments](#how-to-create-experiments)
 
 ---
 
@@ -58,3 +60,19 @@ All the revisions are automatically applied at startup.
 2. You can now navigate to the about page\
 <img src="docs/imgs/about.png" alt="alt text" style="width:500px; height:auto;">
 3. Here you can see links to pages about different testing methods
+
+---
+
+### How to create experiments
+
+1. Go to localhost:8000/admin
+2. Log in as admin
+3. Create a new experiment with the desired name\
+<img src="docs/imgs/admin.png" alt="alt text" style="width:500px; height:auto;">
+4. You can now upload a configuration file (setup.json) and samples for the experiment\
+<img src="docs/imgs/experiment.png" alt="alt text" style="width:500px; height:auto;">
+<img src="docs/imgs/config.png" alt="alt text" style="width:500px; height:auto;">
+5. All users can now see the experiment on the main page\
+<img src="docs/imgs/main.png" alt="alt text" style="width:500px; height:auto;">
+<img src="docs/imgs/mushra.png" alt="alt text" style="width:500px; height:auto;">
+6. Don't forget to write your feedback at the end.
