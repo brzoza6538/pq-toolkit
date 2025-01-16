@@ -18,14 +18,7 @@
 
 ---
 
-### Installation Steps
-1. Navigate to `src/pq-toolkit`.
-2. Run `poetry install`.
-3. The application is now ready to run.
-
----
-
-### How to Start the Web Application
+### How to Install Start the Web Application
 1. Navigate to `src/deployments`.
 2. Fill in the required `.env.[flavor]` file according to the `.env.[flavor].sample` file (e.g., `.env.dev`).
 3. Navigate to `src/`.
