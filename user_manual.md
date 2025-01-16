@@ -72,7 +72,7 @@ All the revisions are automatically applied at startup.
 
 ---
 
-### How to use the python toolkit
+### How to use the python toolkit (THIS FUNCTION IS DEPRECATED)
 
 1. You can also create experiments using the python toolkit
 2. Find use examples in the `src/pq-toolkit/examples` directory
